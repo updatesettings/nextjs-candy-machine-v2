@@ -1,0 +1,54 @@
+{
+  "name": "@update-settings/nextjs-candy-machine-v2",
+  "version": "0.0.1",
+  "author": "Update Settings <worldwildweb3@gmail.com>",
+  "repository": "https://github.com/update-settings",
+  "license": "Apache-2.0",
+  "files": [
+    "components",
+    "pages",
+    "utils",
+    "public",
+    "styles",
+    ".eslintrc.json",
+    "LICENSE",
+    "next.config.js",
+    "next-env.d.ts",
+    "README.md",
+    "tsconfig.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "shx rm -rf .next",
+    "dev": "next dev",
+    "build": "yarn clean && next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@civic/solana-gateway-react": "^0.4.6",
+    "@notionhq/client": "^0.4.12",
+    "@project-serum/anchor": "^0.19.1-beta.1",
+    "@solana/spl-token": "^0.1.8",
+    "@solana/wallet-adapter-base": "^0.9.0",
+    "@solana/wallet-adapter-react": "^0.15.0",
+    "@solana/wallet-adapter-react-ui": "^0.9.0",
+    "@solana/wallet-adapter-wallets": "^0.14.0",
+    "@solana/web3.js": "^1.20.0",
+    "next": "^11.1.2",
+    "react": "^17.0.2",
+    "react-countdown": "^2.3.2",
+    "react-dom": "^17.0.2",
+    "react-toastify": "^8.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.24",
+    "eslint": "^7.32.0",
+    "eslint-config-next": "^11.1.2",
+    "next-transpile-modules": "^8.0.0",
+    "shx": "^0.3.3",
+    "typescript": "~4.4.4"
+  }
+}
