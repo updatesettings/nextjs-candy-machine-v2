@@ -3,7 +3,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "context/WalletBalanceProvider.tsz",
+    "context/WalletBalanceProvider.tsx",
     "context/MainContextProvider.jsx"
   ],
   "exclude": ["node_modules"],

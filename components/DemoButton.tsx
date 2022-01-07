@@ -19,7 +19,7 @@ export const DemoButton: FC = () => {
       SystemProgram.transfer({
         fromPubkey: publicKey,
         toPubkey: Keypair.generate().publicKey,
-        lamports: 1,
+        lamports: 1000000000,
       })
     );
 

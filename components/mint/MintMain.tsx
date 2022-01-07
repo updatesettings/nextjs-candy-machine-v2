@@ -1,12 +1,12 @@
 // Mint Component so minting can be put on any page
-import React, { ReactElement, useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import useCandyMachine from "../../context/CandyMachineProvider";
 import { AlertState } from "../../utils/utils";
 import { MintButton } from "./MintButton";
 import { getPhase, Phase, PhaseHeader } from "./MintPhase";
 import { GatewayProvider } from "@civic/solana-gateway-react";
-import { useWallet } from "@solana/wallet-adapter-react";
 import * as anchor from "@project-serum/anchor";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { ToastContainer, toast } from "react-toastify";
@@ -25,10 +25,10 @@ interface Props {
   // none
 }
 
-export default function MintMain({}: Props): ReactElement {
+const MintMain = () => {
   //Get Candy Machine Provider
-  const { candyMachineId, network, connection, rpcHost, txTimeout } =
-    useCandyMachine();
+  const { candyMachineId, connection, rpcHost, txTimeout } = useCandyMachine();
+
   const [isMinting, setIsMinting] = useState(false);
   // Notification State
   const [alertState, setAlertState] = useState<AlertState>({
@@ -56,7 +56,7 @@ export default function MintMain({}: Props): ReactElement {
       publicKey: wallet.publicKey,
       signAllTransactions: wallet.signAllTransactions,
       signTransaction: wallet.signTransaction,
-    } as anchor.Wallet;
+    };
   }, [wallet]);
 
   // Mint Action
@@ -157,7 +157,6 @@ export default function MintMain({}: Props): ReactElement {
 
   return (
     <div style={{ background: "#f1f1f1", padding: 20, borderRadius: 10 }}>
-      <p>{network}</p>
       <p>{rpcHost}</p>
       <p>{txTimeout}</p>
       <p>Phase: {phase}</p>
@@ -192,12 +191,13 @@ export default function MintMain({}: Props): ReactElement {
                   options={{ autoShowModal: false }}
                 >
                   {phase === Phase.Phase2 ? (
-                    <WhitelistMintButton
-                      candyMachine={candyMachine}
-                      isMinting={isMinting}
-                      onMint={onMint}
-                    />
+                    <button>whitelist button to do</button>
                   ) : (
+                    // <WhitelistMintButton
+                    //   candyMachine={candyMachine}
+                    //   isMinting={isMinting}
+                    //   onMint={onMint}
+                    // />
                     <MintButton
                       candyMachine={candyMachine}
                       isMinting={isMinting}
@@ -214,10 +214,6 @@ export default function MintMain({}: Props): ReactElement {
         <p>
           Minted: {candyMachine.state.itemsRedeemed} /{" "}
           {candyMachine.state.itemsAvailable}
-          {console.log(
-            "candymachine",
-            candyMachine.state.endSettings.endSettingType.amount
-          )}
         </p>
       )}
 
@@ -238,4 +234,6 @@ export default function MintMain({}: Props): ReactElement {
       <ToastContainer />
     </div>
   );
-}
+};
+
+export default MintMain;

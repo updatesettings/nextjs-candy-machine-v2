@@ -6,10 +6,10 @@ interface Props {}
 
 export default function RSVP({}: Props): ReactElement {
   const { publicKey } = useWallet();
-  const [walletAddLoading, setWalletAddLoading] = useState(null);
+  const [walletAddLoading, setWalletAddLoading] = useState(false);
   const [walletAdded, setWalletAdded] = useState("");
 
-  const submitRSVP = async (walletAddress) => {
+  const submitRSVP = async (walletAddress: any) => {
     setWalletAddLoading(true);
     const res = await fetch("/api/submit-form", {
       method: "POST",
