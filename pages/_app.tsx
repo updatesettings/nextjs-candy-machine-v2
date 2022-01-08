@@ -3,7 +3,7 @@ import { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { FC, ReactNode } from "react";
 import MainContextProvider from "../context/MainContextProvider";
-import { WalletBalanceProvider } from "../context/WalletBalanceProvider.tsx";
+import { WalletBalanceProvider } from "../context/WalletBalanceProvider";
 import Header from "../components/layout/Header";
 import { CandyMachineProvider } from "../context/CandyMachineProvider";
 

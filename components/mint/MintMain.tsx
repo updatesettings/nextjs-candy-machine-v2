@@ -1,47 +1,43 @@
-// Mint Component so minting can be put on any page
-import React, { useState, useMemo, useEffect } from "react";
-import useCandyMachine from "../../context/CandyMachineProvider";
-import { AlertState } from "../../utils/utils";
-import { MintButton } from "./MintButton";
-import { getPhase, Phase, PhaseHeader } from "./MintPhase";
-import { GatewayProvider } from "@civic/solana-gateway-react";
-import * as anchor from "@project-serum/anchor";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey } from "@solana/web3.js";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-// Candy Machine
+import { useEffect, useMemo, useState, useCallback } from 'react';
+import * as anchor from '@project-serum/anchor';
+import {
+  WalletMultiButton,
+} from "@solana/wallet-adapter-react-ui";
+import { PublicKey } from '@solana/web3.js';
+import { useWallet } from '@solana/wallet-adapter-react';
 import {
   awaitTransactionSignatureConfirmation,
   CandyMachineAccount,
   CANDY_MACHINE_PROGRAM,
   getCandyMachineState,
   mintOneToken,
-} from "../../utils/candy-machine";
+} from '../../utils/candy-machine';
+import { AlertState } from '../../utils/utils';
+import { Header } from './MintHeader';
+import { MintButton } from './MintButton';
+import { GatewayProvider } from '@civic/solana-gateway-react';
 
-interface Props {
-  // none
+
+export interface MintMainProps {
+  candyMachineId?: anchor.web3.PublicKey;
+  connection: anchor.web3.Connection;
+  startDate: number;
+  txTimeout: number;
+  rpcHost: string;
 }
 
-const MintMain = () => {
-  //Get Candy Machine Provider
-  const { candyMachineId, connection, rpcHost, txTimeout } = useCandyMachine();
-
-  const [isMinting, setIsMinting] = useState(false);
-  // Notification State
+const MintMain = (props: MintMainProps) => {
+  const [isUserMinting, setIsUserMinting] = useState(false);
+  const [candyMachine, setCandyMachine] = useState<CandyMachineAccount>();
   const [alertState, setAlertState] = useState<AlertState>({
     open: false,
-    message: "",
+    message: '',
     severity: undefined,
   });
-  // Candy Machine State
-  const [candyMachine, setCandyMachine] = useState<CandyMachineAccount>();
 
+  const rpcUrl = props.rpcHost;
   const wallet = useWallet();
 
-  // connect wallet
   const anchorWallet = useMemo(() => {
     if (
       !wallet ||
@@ -56,15 +52,33 @@ const MintMain = () => {
       publicKey: wallet.publicKey,
       signAllTransactions: wallet.signAllTransactions,
       signTransaction: wallet.signTransaction,
-    };
+    } as anchor.Wallet;
   }, [wallet]);
 
-  // Mint Action
+  const refreshCandyMachineState = useCallback(async () => {
+    if (!anchorWallet) {
+      return;
+    }
+
+    if (props.candyMachineId) {
+      try {
+        const cndy = await getCandyMachineState(
+          anchorWallet,
+          props.candyMachineId,
+          props.connection,
+        );
+        setCandyMachine(cndy);
+      } catch (e) {
+        console.log('There was a problem fetching Candy Machine state');
+        console.log(e);
+      }
+    }
+  }, [anchorWallet, props.candyMachineId, props.connection]);
 
   const onMint = async () => {
     try {
-      setIsMinting(true);
-      document.getElementById("#identity")?.click();
+      setIsUserMinting(true);
+      document.getElementById('#identity')?.click();
       if (wallet.connected && candyMachine?.program && wallet.publicKey) {
         const mintTxId = (
           await mintOneToken(candyMachine, wallet.publicKey)
@@ -74,39 +88,34 @@ const MintMain = () => {
         if (mintTxId) {
           status = await awaitTransactionSignatureConfirmation(
             mintTxId,
-            txTimeout,
-            connection,
-            "singleGossip",
-            true
+            props.txTimeout,
+            props.connection,
+            true,
           );
         }
 
-        if (!status?.err) {
-          toast.success("🦄 Congrats! Mint Successful!");
+        if (status && !status.err) {
           setAlertState({
             open: true,
-            message: "Congratulations! Mint succeeded!",
-            severity: "success",
+            message: 'Congratulations! Mint succeeded!',
+            severity: 'success',
           });
         } else {
-          toast.error("Mint Fail! Try Again");
           setAlertState({
             open: true,
-            message: "Mint failed! Please try again!",
-            severity: "error",
+            message: 'Mint failed! Please try again!',
+            severity: 'error',
           });
         }
       }
     } catch (error: any) {
-      // TODO: blech:
-      let message = error.msg || "Minting failed! Please try again!";
+      let message = error.msg || 'Minting failed! Please try again!';
       if (!error.msg) {
         if (!error.message) {
-          message = "Transaction Timeout! Please try again.";
-        } else if (error.message.indexOf("0x138")) {
-        } else if (error.message.indexOf("0x137")) {
+          message = 'Transaction Timeout! Please try again.';
+        } else if (error.message.indexOf('0x137')) {
           message = `SOLD OUT!`;
-        } else if (error.message.indexOf("0x135")) {
+        } else if (error.message.indexOf('0x135')) {
           message = `Insufficient funds to mint. Please fund your wallet.`;
         }
       } else {
@@ -117,121 +126,87 @@ const MintMain = () => {
           message = `Minting period hasn't started yet.`;
         }
       }
-      toast.error(message);
+
       setAlertState({
         open: true,
         message,
-        severity: "error",
+        severity: 'error',
       });
     } finally {
-      setIsMinting(false);
+      setIsUserMinting(false);
     }
   };
 
-  // Effect
   useEffect(() => {
-    (async () => {
-      if (!anchorWallet) {
-        return;
-      }
-
-      if (candyMachineId) {
-        try {
-          const cndy = await getCandyMachineState(
-            anchorWallet,
-            candyMachineId,
-            connection
-          );
-          setCandyMachine(cndy);
-        } catch (e) {
-          console.log("Problem getting candy machine state");
-          console.log(e);
-        }
-      } else {
-        console.log("No candy machine detected in configuration.");
-      }
-    })();
-  }, [anchorWallet, candyMachineId, connection]);
-
-  const phase = getPhase(candyMachine);
+    refreshCandyMachineState();
+  }, [
+    anchorWallet,
+    props.candyMachineId,
+    props.connection,
+    refreshCandyMachineState,
+  ]);
 
   return (
-    <div style={{ background: "#f1f1f1", padding: 20, borderRadius: 10 }}>
-      <p>{rpcHost}</p>
-      <p>{txTimeout}</p>
-      <p>Phase: {phase}</p>
+    <div style={{ marginTop: 100 }}>
       <div>
-        <PhaseHeader
-          phase={phase}
-          candyMachine={candyMachine}
-          rpcHost={rpcHost}
-        />
-      </div>
-      {!wallet.connected ? (
-        <WalletMultiButton>Connect Wallet</WalletMultiButton>
-      ) : (
-        <div>
-          {(phase === Phase.Phase2 || phase === Phase.Phase3) && (
+        <div
+          style={{ padding: 24, backgroundColor: '#151A1F', borderRadius: 6 }}
+        >
+          {!wallet.connected ? (
+            <WalletMultiButton>Connect Wallet</WalletMultiButton>
+          ) : (
             <>
+              <Header candyMachine={candyMachine} />
               <div>
-                <GatewayProvider
-                  wallet={{
-                    publicKey:
-                      wallet.publicKey || new PublicKey(CANDY_MACHINE_PROGRAM),
-                    //@ts-ignore
-                    signTransaction: wallet.signTransaction,
-                  }}
-                  // // Replace with following when added
-                  // gatekeeperNetwork={candyMachine.state.gatekeeper_network}
-                  gatekeeperNetwork={
-                    candyMachine?.state?.gatekeeper?.gatekeeperNetwork
-                  } // This is the ignite (captcha) network
-                  /// Don't need this for mainnet
-                  clusterUrl={rpcHost}
-                  options={{ autoShowModal: false }}
-                >
-                  {phase === Phase.Phase2 ? (
-                    <button>whitelist button to do</button>
-                  ) : (
-                    // <WhitelistMintButton
-                    //   candyMachine={candyMachine}
-                    //   isMinting={isMinting}
-                    //   onMint={onMint}
-                    // />
+                {candyMachine?.state.isActive &&
+                candyMachine?.state.gatekeeper &&
+                wallet.publicKey &&
+                wallet.signTransaction ? (
+                  <GatewayProvider
+                    wallet={{
+                      publicKey:
+                        wallet.publicKey ||
+                        new PublicKey(CANDY_MACHINE_PROGRAM),
+                      //@ts-ignore
+                      signTransaction: wallet.signTransaction,
+                    }}
+                    gatekeeperNetwork={
+                      candyMachine?.state?.gatekeeper?.gatekeeperNetwork
+                    }
+                    clusterUrl={rpcUrl}
+                    options={{ autoShowModal: false }}
+                  >
                     <MintButton
                       candyMachine={candyMachine}
-                      isMinting={isMinting}
+                      isMinting={isUserMinting}
                       onMint={onMint}
                     />
-                  )}
-                </GatewayProvider>
+                  </GatewayProvider>
+                ) : (
+                  <MintButton
+                    candyMachine={candyMachine}
+                    isMinting={isUserMinting}
+                    onMint={onMint}
+                  />
+                )}
               </div>
             </>
           )}
         </div>
-      )}
-      {candyMachine && (
-        <p>
-          Minted: {candyMachine.state.itemsRedeemed} /{" "}
-          {candyMachine.state.itemsAvailable}
-        </p>
-      )}
+      </div>
 
-      <button onClick={() => toast("Wow so easy!")}>Notify!</button>
-
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      {/* {alertState.message} */}
-      <ToastContainer />
+      {/* <Snackbar
+        open={alertState.open}
+        autoHideDuration={6000}
+        onClose={() => setAlertState({ ...alertState, open: false })}
+      >
+        <Alert
+          onClose={() => setAlertState({ ...alertState, open: false })}
+          severity={alertState.severity}
+        >
+          {alertState.message}
+        </Alert>
+      </Snackbar> */}
     </div>
   );
 };

@@ -1,6 +1,6 @@
-import { CandyMachineAccount } from "../../utils/candy-machine";
 import { GatewayStatus, useGateway } from "@civic/solana-gateway-react";
 import { useEffect, useState } from "react";
+import { CandyMachineAccount } from "../../utils/candy-machine";
 
 export const MintButton = ({
   onMint,
@@ -8,8 +8,7 @@ export const MintButton = ({
   isMinting,
 }: {
   onMint: () => Promise<void>;
-  candyMachine: CandyMachineAccount | undefined;
-
+  candyMachine?: CandyMachineAccount;
   isMinting: boolean;
 }) => {
   const { requestGatewayToken, gatewayStatus } = useGateway();
@@ -17,11 +16,11 @@ export const MintButton = ({
 
   useEffect(() => {
     if (gatewayStatus === GatewayStatus.ACTIVE && clicked) {
-      console.log("Minting");
       onMint();
       setClicked(false);
     }
   }, [gatewayStatus, clicked, setClicked, onMint]);
+
   return (
     <button
       disabled={

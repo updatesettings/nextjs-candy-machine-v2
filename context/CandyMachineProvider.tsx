@@ -1,29 +1,45 @@
 import { createContext, useContext } from "react";
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import * as anchor from "@project-serum/anchor";
 
 const CandyMachineContext = createContext(null);
 
-const candyMachineId = process.env.NEXT_PUBLIC_CANDY_MACHINE_ID
-  ? new anchor.web3.PublicKey(process.env.NEXT_PUBLIC_CANDY_MACHINE_ID)
-  : undefined;
+const getCandyMachineId = (): anchor.web3.PublicKey | undefined => {
+  try {
+    const candyMachineId = new anchor.web3.PublicKey(
+      process.env.NEXT_PUBLIC_CANDY_MACHINE_ID!,
+    );
 
-const network = process.env.NEXT_PUBLIC_SOLANA_NETWORK;
+    return candyMachineId;
+  } catch (e) {
+    console.log('Failed to construct CandyMachineId', e);
+    return undefined;
+  }
+};
 
+const candyMachineId = getCandyMachineId();
+const network = process.env.NEXT_PUBLIC_SOLANA_NETWORK as WalletAdapterNetwork;
 const rpcHost = process.env.NEXT_PUBLIC_SOLANA_RPC_HOST!;
 const connection = new anchor.web3.Connection(rpcHost);
 
-const txTimeout = 30000; // milliseconds (confirm this works for your project)
+const startDate = parseInt(process.env.NEXT_PUBLIC_CANDY_START_DATE!, 10);
+const txTimeout = 30000;
 
-export default function useCandyMachine() {
-  return useContext(CandyMachineContext);
-}
+
+
+
 
 export const CandyMachineProvider: React.FC<{}> = ({ children }) => {
-  const value = { candyMachineId, network, connection, rpcHost, txTimeout };
-  console.log("candymachineId", candyMachineId);
+
   return (
-    <CandyMachineContext.Provider value={value}>
+    <CandyMachineContext.Provider value={[candyMachineId, network, connection, startDate, txTimeout, rpcHost] as any}>
       {children}
     </CandyMachineContext.Provider>
   );
 };
+
+
+export default function useCandyMachine() {
+  const [candyMachineId, network, connection, startDate, txTimeout, rpcHost]: any = useContext(CandyMachineContext);
+  return [candyMachineId, network, connection, startDate, txTimeout, rpcHost];
+}
