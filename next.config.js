@@ -8,4 +8,9 @@ const withTM = require("next-transpile-modules")([
 module.exports = withTM({
   reactStrictMode: true,
   webpack5: true,
+  webpack: (config) => {
+    config.resolve.fallback = { fs: false, os: false, path: false, stream: false };
+
+    return config;
+  },
 });
