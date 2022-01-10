@@ -5,7 +5,6 @@ import { FC, ReactNode } from "react";
 import MainContextProvider from "../context/MainContextProvider";
 import { WalletBalanceProvider } from "../context/WalletBalanceProvider";
 import Header from "../components/layout/Header";
-import { CandyMachineProvider } from "../context/CandyMachineProvider";
 
 // Use require instead of import, and order matters
 require("../styles/globals.css");
@@ -26,12 +25,10 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
     <WalletConnectionProvider>
       <WalletModalProvider>
         <WalletBalanceProvider>
-          <CandyMachineProvider>
-            <MainContextProvider>
-              <Header />
-              <Component {...pageProps} />
-            </MainContextProvider>
-          </CandyMachineProvider>
+          <MainContextProvider>
+            <Header />
+            <Component {...pageProps} />
+          </MainContextProvider>
         </WalletBalanceProvider>
       </WalletModalProvider>
     </WalletConnectionProvider>

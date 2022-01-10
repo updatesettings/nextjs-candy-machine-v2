@@ -38,6 +38,8 @@ const MintMain = (props: MintMainProps) => {
   const rpcUrl = props.rpcHost;
   const wallet = useWallet();
 
+
+
   const anchorWallet = useMemo(() => {
     if (
       !wallet ||
@@ -150,7 +152,7 @@ const MintMain = (props: MintMainProps) => {
     <div style={{ marginTop: 100 }}>
       <div>
         <div
-          style={{ padding: 24, backgroundColor: '#151A1F', borderRadius: 6 }}
+          style={{ padding: 24, backgroundColor: '#c8e3fd', borderRadius: 6 }}
         >
           {!wallet.connected ? (
             <WalletMultiButton>Connect Wallet</WalletMultiButton>
