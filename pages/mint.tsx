@@ -1,6 +1,5 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import useWalletBalance from "../context/WalletBalanceProvider";
 import MintMain from "../components/mint/MintMain";
 import * as anchor from "@project-serum/anchor";
@@ -35,13 +34,13 @@ const Mint: NextPage = () => {
   
 
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>Mint</title>
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>Mint Page</h1>
+      <main>
+        <h1 className="text-3xl font-bold underline">Mint Page</h1>
         <p>{balance}</p>
         <MintMain
           candyMachineId={candyMachineId}
