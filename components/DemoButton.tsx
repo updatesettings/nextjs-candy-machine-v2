@@ -1,3 +1,5 @@
+//DO NOT USE THIS IS A DEMO BUTTON
+
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import {

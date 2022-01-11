@@ -4,8 +4,10 @@ import dynamic from "next/dynamic";
 import { FC, ReactNode } from "react";
 import MainContextProvider from "../context/MainContextProvider";
 import { WalletBalanceProvider } from "../context/WalletBalanceProvider";
-import Header from "../components/layout/Header";
+import Layout from "../components/layout/Layout";
+import { ToastContainer } from "react-toastify";
 
+import "react-toastify/dist/ReactToastify.css";
 // Use require instead of import, and order matters
 require("../styles/globals.css");
 require("@solana/wallet-adapter-react-ui/styles.css");
@@ -26,8 +28,21 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
       <WalletModalProvider>
         <WalletBalanceProvider>
           <MainContextProvider>
-            <Header />
-            <Component {...pageProps} />
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+            />
+            <ToastContainer />
           </MainContextProvider>
         </WalletBalanceProvider>
       </WalletModalProvider>

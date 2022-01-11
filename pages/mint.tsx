@@ -3,7 +3,6 @@ import Head from "next/head";
 import useWalletBalance from "../context/WalletBalanceProvider";
 import MintMain from "../components/mint/MintMain";
 import * as anchor from "@project-serum/anchor";
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 
 
 const getCandyMachineId = (): anchor.web3.PublicKey | undefined => {
@@ -20,7 +19,6 @@ const getCandyMachineId = (): anchor.web3.PublicKey | undefined => {
 };
 
 const candyMachineId = getCandyMachineId();
-const network = process.env.NEXT_PUBLIC_SOLANA_NETWORK as WalletAdapterNetwork;
 const rpcHost = process.env.NEXT_PUBLIC_SOLANA_RPC_HOST!;
 const connection = new anchor.web3.Connection(rpcHost);
 
