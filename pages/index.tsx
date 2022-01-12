@@ -1,13 +1,14 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import { useMainContext } from "../context/MainContextProvider";
+import { useUserContext } from "../context/UserContextProvider";
 import useWalletBalance from "../context/WalletBalanceProvider";
 import { DemoButton } from "../components/DemoButton";
+import * as solanaWeb3 from "@solana/web3.js";
 
 const Index: NextPage = () => {
-  const { demo, setDemo } = useMainContext();
+  const { demo, setDemo } = useUserContext();
   const [balance] = useWalletBalance();
-
+  console.log("solanaWeb3", solanaWeb3);
   return (
     <div className="">
       <Head>

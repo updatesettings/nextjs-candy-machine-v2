@@ -2,15 +2,15 @@
 
 import { useState, createContext, useContext } from "react";
 
-const MainContext = createContext();
+const UserContext = createContext();
 
-export default function MainContextProvider({ children }) {
+export default function UserContextProvider({ children }) {
   const [demo, setDemo] = useState("Welcome to Main Context");
 
   const value = { demo, setDemo };
-  return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
 
-export function useMainContext() {
-  return useContext(MainContext);
+export function useUserContext() {
+  return useContext(UserContext);
 }

@@ -2,7 +2,7 @@ import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { FC, ReactNode } from "react";
-import MainContextProvider from "../context/MainContextProvider";
+import UserContextProvider from "../context/UserContextProvider";
 import { WalletBalanceProvider } from "../context/WalletBalanceProvider";
 import Layout from "../components/layout/Layout";
 import { ToastContainer } from "react-toastify";
@@ -27,7 +27,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
     <WalletConnectionProvider>
       <WalletModalProvider>
         <WalletBalanceProvider>
-          <MainContextProvider>
+          <UserContextProvider>
             <Layout>
               <Component {...pageProps} />
             </Layout>
@@ -43,7 +43,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
               pauseOnHover
             />
             <ToastContainer />
-          </MainContextProvider>
+          </UserContextProvider>
         </WalletBalanceProvider>
       </WalletModalProvider>
     </WalletConnectionProvider>

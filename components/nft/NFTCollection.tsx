@@ -1,27 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
-import * as anchor from "@project-serum/anchor";
-
-const rpcHost = process.env.NEXT_PUBLIC_SOLANA_RPC_HOST!;
-const connection = new anchor.web3.Connection(rpcHost);
+import React from "react";
+import { NFTItem } from "./NFTItem";
+import useWalletNFTs from "../../hooks/useWalletNFTs";
 
 interface Props {
   //none currently
 }
 
 export const NFTCollection = (props: Props) => {
-  const wallet = useWallet();
-  const [isLoading, setIsLoading] = useState(false);
-
+  const { NFTs } = useWalletNFTs();
   return (
     <div>
-      {isLoading ? (
-        <p>Loading....</p>
-      ) : (
-        <div>
-          <p>NFTS NOT WORKING YES</p>
-        </div>
-      )}
+      {NFTs &&
+        NFTs.map((nft) => {
+          return <NFTItem key={nft.onChain.mint} nft={nft} />;
+        })}
     </div>
   );
 };

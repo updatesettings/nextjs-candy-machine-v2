@@ -4,7 +4,7 @@
     "**/*.ts",
     "**/*.tsx",
     "context/WalletBalanceProvider.tsx",
-    "context/MainContextProvider.jsx"
+    "context/UserContextProvider.jsx"
   ],
   "exclude": ["node_modules"],
   "compilerOptions": {
@@ -21,6 +21,14 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    "removeComments": true,
+    "paths": {
+      "@lib/*": ["lib/*"],
+      "@data": ["data/index"],
+      "@components/*": ["components/*"],
+      "@pages/*": ["pages/*"],
+      "@hooks/*": ["hooks/*"]
+    }
   }
 }

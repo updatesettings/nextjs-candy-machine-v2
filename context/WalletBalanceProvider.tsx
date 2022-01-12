@@ -34,7 +34,6 @@ export const WalletBalanceProvider: React.FC<{}> = ({ children }) => {
       }
     })();
   }, [wallet, connection]);
-
   return (
     <BalanceContext.Provider value={[balance, setBalance] as any}>
       {children}
