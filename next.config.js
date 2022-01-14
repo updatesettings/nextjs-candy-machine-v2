@@ -20,6 +20,5 @@ module.exports = withTM({
   },
   images: {
     domains: ["arweave.net", "www.arweave.net"],
-    formats: ["image/webp", "image/jpeg", "image/png", "image/gif"],
   },
 });
