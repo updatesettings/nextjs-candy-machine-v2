@@ -15,6 +15,7 @@ const Index: NextPage = () => {
         <title>Next.js CMv2 Demo</title>
         <meta name="description" content="Candy Machine V2 Demo with Next.js" />
         <link rel="icon" href="/favicon.ico" />
+        <meta property="og:image" content="/seo.png" />
       </Head>
 
       <main className="">
