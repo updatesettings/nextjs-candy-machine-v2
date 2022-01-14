@@ -6,8 +6,9 @@ const UserContext = createContext();
 
 export default function UserContextProvider({ children }) {
   const [demo, setDemo] = useState("Welcome to Main Context");
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const value = { demo, setDemo };
+  const value = { demo, setDemo, menuOpen, setMenuOpen };
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
 

@@ -5,11 +5,19 @@ import {
 
 export default function Footer() {
   return (
-    <footer>
-      <p>{new Date().getFullYear()}</p>
-      <div className="">
-        <WalletMultiButton className="btn-wallet" />
-        <WalletDisconnectButton />
+    <footer className="footer">
+      <a
+        className="footer-copy"
+        href="https://updatesettings.com/"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Update Settings © {new Date().getFullYear()}
+      </a>
+      <div className="flex flex-row">
+        <div className="footer-button">
+          <WalletMultiButton className="btn-wallet--footer" />
+        </div>
       </div>
     </footer>
   );

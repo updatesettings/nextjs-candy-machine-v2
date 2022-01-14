@@ -3,7 +3,12 @@ import { useEffect, useState } from "react";
 
 import useMetadataAccounts from "./useMetadataAccounts";
 
-const DEFAULT_CANDY_MACHINES: string[] | null = null;
+// const DEFAULT_CANDY_MACHINES: string[] | null = null;
+const DEFAULT_CANDY_MACHINES: string[] | null = [
+  "BWN1SApp93ghfMNDaHChPh6n5BiTHLpyj5E1y8twz6vw",
+  "ApQZr1ynnGteyQf3zEs5hw9HZfqvULf2uTUNPiFM79kS",
+  "4usK2SvdNtvfcKEwicjXaVxHPbh8KSRKzoVHM2EbYmDv",
+];
 
 export type NFT = {
   onChain: Metadata;

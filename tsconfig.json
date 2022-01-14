@@ -22,13 +22,6 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "removeComments": true,
-    "paths": {
-      "@lib/*": ["lib/*"],
-      "@data": ["data/index"],
-      "@components/*": ["components/*"],
-      "@pages/*": ["pages/*"],
-      "@hooks/*": ["hooks/*"]
-    }
+    "removeComments": true
   }
 }

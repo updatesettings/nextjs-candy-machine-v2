@@ -7,12 +7,7 @@ interface Props {
 }
 
 export const NFTCollection = (props: Props) => {
-  const addresses = [
-    "BWN1SApp93ghfMNDaHChPh6n5BiTHLpyj5E1y8twz6vw",
-    "ApQZr1ynnGteyQf3zEs5hw9HZfqvULf2uTUNPiFM79kS",
-    "4usK2SvdNtvfcKEwicjXaVxHPbh8KSRKzoVHM2EbYmDv",
-  ];
-  const { NFTs } = useWalletNFTs(addresses);
+  const { NFTs } = useWalletNFTs();
   return (
     <div>
       {NFTs &&
