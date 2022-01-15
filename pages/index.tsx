@@ -20,7 +20,16 @@ const Index: NextPage = () => {
 
       <main className="">
         <h1 className="">{demo}</h1>
-        <button onClick={() => setDemo("Demo Changing Context")}>
+        <button
+          className="btn"
+          onClick={() => setDemo("Demo Changing Context")}
+        >
+          Click me
+        </button>
+        <button
+          className="btn-outline"
+          onClick={() => setDemo("Demo Changing Context")}
+        >
           Click me
         </button>
         <DemoButton />

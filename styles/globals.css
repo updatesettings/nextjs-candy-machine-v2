@@ -5,6 +5,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap");
 
 /* Variables */
+
 :root {
   --black: #000000;
   --white: #ffffff;
@@ -59,7 +60,7 @@
 }
 
 .main {
-  @apply bg-pageBG bg-red-700 text-pageText flex-grow h-full;
+  @apply bg-pageBG text-pageText flex-grow h-full;
 }
 
 .footer {
@@ -110,11 +111,14 @@
 /* Button - Primary Color*/
 /* Button - Secondary Color */
 .btn {
-  @apply block bg-red-900;
+  @apply text-lg bg-pageText border-pageText border-4 text-white font-bold py-2 px-4;
+}
+.btn-outline {
+  @apply text-lg bg-transparent hover:bg-pageText text-pageText font-semibold hover:text-pageBG py-2 px-4 border-4 border-pageText hover:border-transparent;
 }
 
 .btn-wallet {
-  @apply bg-blue-500 !important;
+  @apply bg-red-400 font-sans text-pageText rounded-none font-extrabold md:text-xl hover:underline !important;
 }
 
 /* Outline Button - Black */
