@@ -118,7 +118,7 @@
 }
 
 .btn-wallet {
-  @apply bg-red-400 font-sans text-pageText rounded-none font-extrabold md:text-xl hover:underline !important;
+  @apply bg-transparent font-sans text-pageText rounded-none font-extrabold md:text-xl hover:underline  p-0 !important;
 }
 
 /* Outline Button - Black */

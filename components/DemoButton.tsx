@@ -13,15 +13,19 @@ import React, { FC, useCallback } from "react";
 export const DemoButton: FC = () => {
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
+  // var recieverWallet = new web3.PublicKey("9fuYBoRvgptU4fVZ8ZqvWTTc6oC68P4tjuSA2ySzn6Nv");
+  const sendValue = 100000 / LAMPORTS_PER_SOL;
 
   const onClick = useCallback(async () => {
     if (!publicKey) throw new WalletNotConnectedError();
+    console.log("Publickey", publicKey);
+    console.log("Gen keypair", Keypair.generate().publicKey);
 
     const transaction = new Transaction().add(
       SystemProgram.transfer({
         fromPubkey: publicKey,
         toPubkey: Keypair.generate().publicKey,
-        lamports: 1000000000,
+        lamports: 10000000,
       })
     );
 
@@ -33,7 +37,7 @@ export const DemoButton: FC = () => {
   return (
     <>
       <button onClick={onClick} disabled={!publicKey}>
-        Send 1 lamport to a random address!
+        Send {sendValue} lamport to a random address!
       </button>
     </>
   );
