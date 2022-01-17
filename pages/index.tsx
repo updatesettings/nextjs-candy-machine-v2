@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import Head from "next/head";
 import { useUserContext } from "../context/UserContextProvider";
 import useWalletBalance from "../context/WalletBalanceProvider";
-import { DemoButton } from "../components/DemoButton";
+import { DevTip } from "../components/DevTip";
 import * as solanaWeb3 from "@solana/web3.js";
 
 const Index: NextPage = () => {
@@ -32,7 +32,6 @@ const Index: NextPage = () => {
         >
           Click me
         </button>
-        <DemoButton />
         <p>{balance}</p>
       </main>
     </div>

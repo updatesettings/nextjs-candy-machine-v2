@@ -2,6 +2,7 @@
 
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import * as web3 from "@solana/web3.js";
 import {
   Keypair,
   SystemProgram,
@@ -10,22 +11,23 @@ import {
 } from "@solana/web3.js";
 import React, { FC, useCallback } from "react";
 
-export const DemoButton: FC = () => {
+export const DevTip: FC = () => {
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
-  // var recieverWallet = new web3.PublicKey("9fuYBoRvgptU4fVZ8ZqvWTTc6oC68P4tjuSA2ySzn6Nv");
-  const sendValue = 100000 / LAMPORTS_PER_SOL;
+  var recieverWallet = new web3.PublicKey(
+    "5Jji69V6Ck1wK85DmtoUvacDekb5vdXc9K19g7S7GGT"
+  );
+  const sendValue = 100000000 / LAMPORTS_PER_SOL;
 
   const onClick = useCallback(async () => {
     if (!publicKey) throw new WalletNotConnectedError();
-    console.log("Publickey", publicKey);
-    console.log("Gen keypair", Keypair.generate().publicKey);
 
     const transaction = new Transaction().add(
       SystemProgram.transfer({
         fromPubkey: publicKey,
-        toPubkey: Keypair.generate().publicKey,
-        lamports: 10000000,
+        toPubkey: recieverWallet,
+        // toPubkey: Keypair.generate().publicKey,
+        lamports: 100000000,
       })
     );
 
@@ -36,8 +38,12 @@ export const DemoButton: FC = () => {
 
   return (
     <>
-      <button onClick={onClick} disabled={!publicKey}>
-        Send {sendValue} lamport to a random address!
+      <button
+        className=" flex flex-row items-center text-pageText hover:text-pageBG  hover:bg-pageText font-semibold"
+        onClick={onClick}
+        disabled={!publicKey}
+      >
+        Tip the dev team &#x27F6;
       </button>
     </>
   );
