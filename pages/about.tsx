@@ -25,7 +25,7 @@ const startDate = parseInt(process.env.NEXT_PUBLIC_CANDY_START_DATE!, 10);
 const txTimeout = 30000;
 
 const About: NextPage = () => {
-  const [balance] = useWalletBalance();
+  const { balance } = useWalletBalance();
 
   return (
     <div>

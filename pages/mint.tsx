@@ -4,16 +4,15 @@ import useWalletBalance from "../context/WalletBalanceProvider";
 import MintMain from "../components/mint/MintMain";
 import * as anchor from "@project-serum/anchor";
 
-
 const getCandyMachineId = (): anchor.web3.PublicKey | undefined => {
   try {
     const candyMachineId = new anchor.web3.PublicKey(
-      process.env.NEXT_PUBLIC_CANDY_MACHINE_ID!,
+      process.env.NEXT_PUBLIC_CANDY_MACHINE_ID!
     );
 
     return candyMachineId;
   } catch (e) {
-    console.log('Failed to construct CandyMachineId', e);
+    console.log("Failed to construct CandyMachineId", e);
     return undefined;
   }
 };
@@ -25,11 +24,8 @@ const connection = new anchor.web3.Connection(rpcHost);
 const startDate = parseInt(process.env.NEXT_PUBLIC_CANDY_START_DATE!, 10);
 const txTimeout = 30000;
 
-
-
 const Mint: NextPage = () => {
-  const [balance] = useWalletBalance();
-  
+  const { balance } = useWalletBalance();
 
   return (
     <div>
