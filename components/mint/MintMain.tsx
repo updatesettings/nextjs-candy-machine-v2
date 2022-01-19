@@ -32,6 +32,7 @@ export interface MintMainProps {
 
 const MintMain = (props: MintMainProps) => {
   const [isUserMinting, setIsUserMinting] = useState(false);
+  const [candyMachineLoading, setCandyMachineLoading] = useState(false);
   const [candyMachine, setCandyMachine] = useState<CandyMachineAccount>();
   const [whitelistEnabled, setWhitelistEnabled] = useState(false);
   const [whitelistTokenBalance, setWhitelistTokenBalance] = useState(0);
@@ -67,6 +68,7 @@ const MintMain = (props: MintMainProps) => {
     }
 
     if (props.candyMachineId) {
+      setCandyMachineLoading(true);
       try {
         const cndy = await getCandyMachineState(
           anchorWallet,
@@ -106,6 +108,7 @@ const MintMain = (props: MintMainProps) => {
         console.log("There was a problem fetching Candy Machine state");
         console.log(e);
       }
+      setCandyMachineLoading(false);
     }
   }, [anchorWallet, props.candyMachineId, props.connection]);
 
@@ -184,6 +187,33 @@ const MintMain = (props: MintMainProps) => {
     refreshCandyMachineState,
   ]);
 
+  if (candyMachineLoading) {
+    return (
+      <div className="mint-wrapper--loading" style={{ height: 280 }}>
+        <svg
+          className="animate-spin -ml-1 mr-3 h-10 w-10 text-slate-300"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          ></circle>
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+      </div>
+    );
+  }
+
   return (
     <div className="mint-wrapper">
       <MintCountdown
@@ -197,7 +227,7 @@ const MintMain = (props: MintMainProps) => {
       />
       <div className="mint-card">
         {!wallet.connected ? (
-          <WalletMultiButton className="btn-connect btn-reverse">
+          <WalletMultiButton className="btn-connect btn-reverse m-auto">
             Connect Wallet
           </WalletMultiButton>
         ) : (
@@ -265,10 +295,12 @@ const MintMain = (props: MintMainProps) => {
           </>
         )}
       </div>
-      <div className="mint-count">
-        Count:{" "}
-        {`${candyMachine?.state.itemsRemaining} / ${candyMachine?.state.itemsAvailable}`}
-      </div>
+      {candyMachine && (
+        <div className="mint-count">
+          Count:{" "}
+          {`${candyMachine?.state.itemsRemaining} / ${candyMachine?.state.itemsAvailable}`}
+        </div>
+      )}
     </div>
   );
 };

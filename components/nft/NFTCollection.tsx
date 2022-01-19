@@ -9,7 +9,7 @@ interface Props {
 export const NFTCollection = (props: Props) => {
   const { NFTs } = useWalletNFTs();
   return (
-    <div>
+    <div className="collection">
       {NFTs &&
         NFTs.map((nft) => {
           return <NFTItem key={nft.onChain.mint} nft={nft} />;
