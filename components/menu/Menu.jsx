@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useUserContext } from "../../context/UserContextProvider";
+import useWalletBalance from "../../context/WalletBalanceProvider";
 // import { isBrowser } from "../../utils/utils";
 
 // To Do
@@ -7,6 +8,7 @@ import { useUserContext } from "../../context/UserContextProvider";
 
 export default function Menu() {
   const { menuOpen, setMenuOpen } = useUserContext();
+  const { walletAddress } = useWalletBalance();
 
   const menuToggle = () => {
     setMenuOpen(!menuOpen);
@@ -49,8 +51,21 @@ export default function Menu() {
               </li>
               <li>
                 <Link href="/nft">
-                  <a className="menu-bar-link" onClick={menuToggle}>
-                    NFT Collection
+                  <a
+                    className={
+                      !walletAddress
+                        ? "pointer-events-none menu-bar-link opacity-50 relative"
+                        : "menu-bar-link"
+                    }
+                    onClick={menuToggle}
+                    disable={!walletAddress}
+                  >
+                    NFT Collection{" "}
+                    {!walletAddress && (
+                      <span className="absolute left-0 -bottom-6 text-pageBG text-2xs font-normal">
+                        Connect wallet for access
+                      </span>
+                    )}
                   </a>
                 </Link>
               </li>

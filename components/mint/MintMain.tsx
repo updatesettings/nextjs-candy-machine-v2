@@ -175,56 +175,51 @@ const MintMain = (props: MintMainProps) => {
   ]);
 
   return (
-    <div style={{ marginTop: 100 }}>
-      <div>
-        <div
-          style={{ padding: 24, backgroundColor: "#c8e3fd", borderRadius: 6 }}
-        >
-          {!wallet.connected ? (
-            <WalletMultiButton>Connect Wallet</WalletMultiButton>
-          ) : (
-            <>
-              <Header candyMachine={candyMachine} />
-              {wallet && whitelistEnabled && (
-                <p>Whitelist token balance: {whitelistTokenBalance}</p>
-              )}
-              <div>
-                {candyMachine?.state.isActive &&
-                candyMachine?.state.gatekeeper &&
-                wallet.publicKey &&
-                wallet.signTransaction ? (
-                  <GatewayProvider
-                    wallet={{
-                      publicKey:
-                        wallet.publicKey ||
-                        new PublicKey(CANDY_MACHINE_PROGRAM),
-                      //@ts-ignore
-                      signTransaction: wallet.signTransaction,
-                    }}
-                    gatekeeperNetwork={
-                      candyMachine?.state?.gatekeeper?.gatekeeperNetwork
-                    }
-                    clusterUrl={rpcUrl}
-                    options={{ autoShowModal: false }}
-                  >
-                    <MintButton
-                      candyMachine={candyMachine}
-                      isMinting={isUserMinting}
-                      onMint={onMint}
-                    />
-                  </GatewayProvider>
-                ) : (
-                  <MintButton
-                    candyMachine={candyMachine}
-                    isMinting={isUserMinting}
-                    onMint={onMint}
-                  />
-                )}
-              </div>
-            </>
+    <div className="mint-card">
+      {!wallet.connected ? (
+        <WalletMultiButton className="btn-connect btn-reverse">
+          Connect Wallet
+        </WalletMultiButton>
+      ) : (
+        <>
+          <Header candyMachine={candyMachine} />
+          {wallet && whitelistEnabled && (
+            <p>Whitelist token balance: {whitelistTokenBalance}</p>
           )}
-        </div>
-      </div>
+          <div>
+            {candyMachine?.state.isActive &&
+            candyMachine?.state.gatekeeper &&
+            wallet.publicKey &&
+            wallet.signTransaction ? (
+              <GatewayProvider
+                wallet={{
+                  publicKey:
+                    wallet.publicKey || new PublicKey(CANDY_MACHINE_PROGRAM),
+                  //@ts-ignore
+                  signTransaction: wallet.signTransaction,
+                }}
+                gatekeeperNetwork={
+                  candyMachine?.state?.gatekeeper?.gatekeeperNetwork
+                }
+                clusterUrl={rpcUrl}
+                options={{ autoShowModal: false }}
+              >
+                <MintButton
+                  candyMachine={candyMachine}
+                  isMinting={isUserMinting}
+                  onMint={onMint}
+                />
+              </GatewayProvider>
+            ) : (
+              <MintButton
+                candyMachine={candyMachine}
+                isMinting={isUserMinting}
+                onMint={onMint}
+              />
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };

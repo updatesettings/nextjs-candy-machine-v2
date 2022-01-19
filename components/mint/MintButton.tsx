@@ -23,6 +23,7 @@ export const MintButton = ({
 
   return (
     <button
+      className="btn btn-reverse"
       disabled={
         candyMachine?.state.isSoldOut ||
         isMinting ||

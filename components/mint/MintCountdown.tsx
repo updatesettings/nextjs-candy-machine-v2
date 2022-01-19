@@ -1,6 +1,4 @@
-import Countdown from 'react-countdown';
-
-
+import Countdown from "react-countdown";
 
 interface MintCountdownProps {
   date: Date | undefined;
@@ -31,28 +29,36 @@ export const MintCountdown: React.FC<MintCountdownProps> = ({
     completed,
   }: MintCountdownRender) => {
     hours += days * 24;
-    if (completed) {
-      return status ? <span >{status}</span> : null;
+    if (!completed) {
+      return status ? (
+        <p className="flex items-center">
+          <span className="flex h-3 w-3 relative mr-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+          </span>
+          {status}
+        </p>
+      ) : null;
     } else {
       return (
-        <div  style={style}>
-          <div>
-            <span>
+        <div className="countdown">
+          <div className="countdown-item">
+            <span className="countdown-num">
               {hours < 10 ? `0${hours}` : hours}
             </span>
-            <span>hrs</span>
+            <span className="countdown-txt">hrs</span>
           </div>
-          <div>
-            <span>
+          <div className="countdown-item">
+            <span className="countdown-num">
               {minutes < 10 ? `0${minutes}` : minutes}
             </span>
-            <span>mins</span>
+            <span className="countdown-txt">mins</span>
           </div>
-          <div>
-            <span>
+          <div className="countdown-item">
+            <span className="countdown-num">
               {seconds < 10 ? `0${seconds}` : seconds}
             </span>
-            <span>secs</span>
+            <span className="countdown-txt">secs</span>
           </div>
         </div>
       );

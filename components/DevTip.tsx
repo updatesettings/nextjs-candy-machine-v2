@@ -39,11 +39,11 @@ export const DevTip: FC = () => {
   return (
     <>
       <button
-        className=" flex flex-row items-center text-pageText hover:text-pageBG  hover:bg-pageText font-semibold"
+        className=" flex flex-row items-center text-pageText hover:text-pageBG  hover:bg-pageText font-semibold mb-2"
         onClick={onClick}
         disabled={!publicKey}
       >
-        Tip the dev team &#x27F6;
+        &#x27F6; Tip the dev team
       </button>
     </>
   );
