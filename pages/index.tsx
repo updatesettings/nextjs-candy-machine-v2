@@ -63,8 +63,8 @@ const Index: NextPage = () => {
           />
         </div>
       </div>
-      <div className="min-h-[60vh] flex items-center justify-center bg-red-200 px-4 md:px-8">
-        <h3 className="text-pageText font-normal text-base text-center max-w-5xl">
+      <div className="min-h-[60vh] flex items-center  px-4 md:px-8">
+        <h3 className="text-pageText font-normal text-base max-w-4xl">
           Need web3 help? Support Update Settings by becoming a Cursor holder to
           receive exclusive access to projects and get hands on web3 dev help by
           our team.{" "}
