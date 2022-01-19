@@ -6,6 +6,7 @@ BETA RELEASE - Updates still being made
 
 ### To Do:
 
+- [ ] Fix Presale Phase Header (page requires refresh)
 - [ ] Remove unused code
 - [ ] Performance optimization
 - [x] Whitelist signup prevent duplicates

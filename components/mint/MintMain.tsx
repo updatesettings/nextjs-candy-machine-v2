@@ -214,29 +214,6 @@ const MintMain = (props: MintMainProps) => {
     );
   }
 
-  if (!whitelistEnabled && !candyMachine?.state.goLiveDate) {
-    return (
-      <div className="mint-wrapper">
-        <MintCountdown
-          date={toDate(
-            candyMachine?.state.goLiveDate
-              ? candyMachine?.state.goLiveDate
-              : candyMachine?.state.isPresale
-              ? new anchor.BN(new Date().getTime() / 1000)
-              : undefined
-          )}
-          status={
-            !candyMachine?.state?.isActive || candyMachine?.state?.isSoldOut
-              ? "COMPLETED"
-              : candyMachine?.state.isPresale
-              ? "PRESALE"
-              : "LIVE"
-          }
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="mint-wrapper">
       <MintCountdown

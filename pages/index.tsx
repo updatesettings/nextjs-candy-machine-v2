@@ -31,18 +31,7 @@ const Index: NextPage = () => {
   return (
     <div className="">
       <h1 className="text-3xl font-bold">Welcome</h1>
-      <div className="min-h-[50vh] flex items-center justify-center">
-        <div className="inline-block w-full">
-          <MintMain
-            candyMachineId={candyMachineId}
-            connection={connection}
-            startDate={startDate}
-            txTimeout={txTimeout}
-            rpcHost={rpcHost}
-          />
-        </div>
-      </div>
-      <div className="min-h-[50vh] flex items-center justify-center">
+      <div className="min-h-[30vh] flex items-center justify-center">
         <div className="inline-block w-full">
           <h3 className="text-pageText font-semibold text-xl text-center max-w-4xl m-auto mb-3">
             Cards by Update Settings is an NFT project to provide a working
@@ -60,6 +49,17 @@ const Index: NextPage = () => {
           <p className="text-pageText opacity-60 text-center">
             Cards are the future designs for an NFT boardgame.
           </p>
+        </div>
+      </div>
+      <div className="min-h-[30vh] flex items-center justify-center">
+        <div className="inline-block w-full">
+          <MintMain
+            candyMachineId={candyMachineId}
+            connection={connection}
+            startDate={startDate}
+            txTimeout={txTimeout}
+            rpcHost={rpcHost}
+          />
         </div>
       </div>
       {walletAddress && (
