@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { AppProps } from "next/app";
 import dynamic from "next/dynamic";
@@ -24,29 +25,38 @@ const WalletConnectionProvider = dynamic<{ children: ReactNode }>(
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
   return (
-    <WalletConnectionProvider>
-      <WalletModalProvider>
-        <WalletBalanceProvider>
-          <UserContextProvider>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-            <ToastContainer
-              position="top-right"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-            />
-            <ToastContainer />
-          </UserContextProvider>
-        </WalletBalanceProvider>
-      </WalletModalProvider>
-    </WalletConnectionProvider>
+    <>
+      <Head>
+        <title>Next.js CMv2 Demo</title>
+        <meta name="description" content="Candy Machine V2 Demo with Next.js" />
+        <link rel="icon" href="/favicon.ico" />
+        <meta property="og:image" content="/seo.png" />
+      </Head>
+
+      <WalletConnectionProvider>
+        <WalletModalProvider>
+          <WalletBalanceProvider>
+            <UserContextProvider>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+              <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
+              <ToastContainer />
+            </UserContextProvider>
+          </WalletBalanceProvider>
+        </WalletModalProvider>
+      </WalletConnectionProvider>
+    </>
   );
 };
 

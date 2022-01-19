@@ -17,9 +17,20 @@ export const MintButton = ({
   useEffect(() => {
     if (gatewayStatus === GatewayStatus.ACTIVE && clicked) {
       onMint();
-      setClicked(false);
+      // setClicked(false);
     }
-  }, [gatewayStatus, clicked, setClicked, onMint]);
+  }, [gatewayStatus, clicked, onMint]);
+
+  const getMintButtonContent = () => {
+    if (candyMachine?.state.isSoldOut) {
+      return "SOLD OUT";
+    } else if (isMinting) {
+      return "LOADING...";
+    } else if (candyMachine?.state.isPresale) {
+      return "PRESALE MINT";
+    }
+    return "MINT";
+  };
 
   return (
     <button
@@ -43,11 +54,7 @@ export const MintButton = ({
         }
       }}
     >
-      {candyMachine?.state.isSoldOut
-        ? "SOLD OUT"
-        : isMinting
-        ? "Loading..."
-        : "MINT"}
+      {getMintButtonContent()}
     </button>
   );
 };

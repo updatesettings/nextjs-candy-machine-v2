@@ -2,13 +2,10 @@ import { Metadata } from "../lib/metadata";
 import { useEffect, useState } from "react";
 
 import useMetadataAccounts from "./useMetadataAccounts";
+import siteData from "../data/siteData";
 
 // const DEFAULT_CANDY_MACHINES: string[] | null = null;
-const DEFAULT_CANDY_MACHINES: string[] | null = [
-  "BWN1SApp93ghfMNDaHChPh6n5BiTHLpyj5E1y8twz6vw",
-  "ApQZr1ynnGteyQf3zEs5hw9HZfqvULf2uTUNPiFM79kS",
-  "4usK2SvdNtvfcKEwicjXaVxHPbh8KSRKzoVHM2EbYmDv",
-];
+const DEFAULT_CANDY_MACHINES: string[] | null = siteData.addresses.creators;
 
 export type NFT = {
   onChain: Metadata;
@@ -50,7 +47,12 @@ const useWalletNFTs = (candyMachineAddresses = DEFAULT_CANDY_MACHINES) => {
             );
 
             /** Make sure it's verified to prevent exploiters */
-            if (creator && creator.verified) {
+            // if (creator && creator.verified) {
+            //   return metadataAccount;
+            // }
+
+            // disabled the creator section
+            if (creator) {
               return metadataAccount;
             }
 

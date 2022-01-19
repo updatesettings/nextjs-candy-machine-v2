@@ -16,7 +16,6 @@ import {
   toDate,
   formatNumber,
 } from "../../utils/utils";
-import { Header } from "./MintHeader";
 import { MintButton } from "./MintButton";
 import { GatewayProvider } from "@civic/solana-gateway-react";
 import { toast } from "react-toastify";
@@ -92,7 +91,7 @@ const MintMain = (props: MintMainProps) => {
 
             balance = tokenBalance?.value?.uiAmount || 0;
           } catch (e) {
-            console.error(e);
+            console.error("no balance found", e);
             balance = 0;
           }
           if (balance > 0) {
@@ -185,6 +184,7 @@ const MintMain = (props: MintMainProps) => {
     props.candyMachineId,
     props.connection,
     refreshCandyMachineState,
+    candyMachine?.state?.isActive,
   ]);
 
   if (candyMachineLoading) {
@@ -214,14 +214,44 @@ const MintMain = (props: MintMainProps) => {
     );
   }
 
+  if (!whitelistEnabled && !candyMachine?.state.goLiveDate) {
+    return (
+      <div className="mint-wrapper">
+        <MintCountdown
+          date={toDate(
+            candyMachine?.state.goLiveDate
+              ? candyMachine?.state.goLiveDate
+              : candyMachine?.state.isPresale
+              ? new anchor.BN(new Date().getTime() / 1000)
+              : undefined
+          )}
+          status={
+            !candyMachine?.state?.isActive || candyMachine?.state?.isSoldOut
+              ? "COMPLETED"
+              : candyMachine?.state.isPresale
+              ? "PRESALE"
+              : "LIVE"
+          }
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="mint-wrapper">
       <MintCountdown
-        date={toDate(candyMachine?.state.goLiveDate)}
-        style={{ justifyContent: "flex-end" }}
+        date={toDate(
+          candyMachine?.state.goLiveDate
+            ? candyMachine?.state.goLiveDate
+            : candyMachine?.state.isPresale
+            ? new anchor.BN(new Date().getTime() / 1000)
+            : undefined
+        )}
         status={
           !candyMachine?.state?.isActive || candyMachine?.state?.isSoldOut
             ? "COMPLETED"
+            : candyMachine?.state.isPresale
+            ? "PRESALE"
             : "LIVE"
         }
       />

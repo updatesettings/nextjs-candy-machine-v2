@@ -32,9 +32,9 @@ export const WalletConnectionProvider: FC<{ children: ReactNode }> = ({
   const wallets = useMemo(
     () => [
       new PhantomWalletAdapter(),
-      new SlopeWalletAdapter(),
+      // new SlopeWalletAdapter(),
       new SolflareWalletAdapter(),
-      new TorusWalletAdapter(),
+      // new TorusWalletAdapter(),
       new LedgerWalletAdapter(),
       new SolletWalletAdapter({ network }),
       new SolletExtensionWalletAdapter({ network }),

@@ -41,7 +41,7 @@ export default function Header() {
                 {shortWalletAddress}
               </span>
             ) : (
-              <span className="absolute bottom-1 translate-y-full  right-1/2 translate-x-1/2  text-3xs p-0 leading-4 text-center">
+              <span className="absolute  bottom-3 md:bottom-1 translate-y-full  right-1/2 translate-x-1/2  text-3xs p-0 leading-4 text-center">
                 Login
               </span>
             )}

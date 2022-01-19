@@ -4,6 +4,10 @@
 /* Inter Font Family 400, 700, 900 */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap");
 
+* {
+  font-family: "Inter", "sans-serif";
+}
+
 /* Variables */
 
 :root {
@@ -144,6 +148,10 @@
 
 .btn-reverse {
   @apply bg-pageBG border-pageBG text-pageText !important;
+}
+
+.btn:disabled {
+  @apply opacity-30 cursor-not-allowed !important;
 }
 
 /* Outline Button - Black */

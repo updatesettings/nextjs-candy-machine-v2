@@ -1,5 +1,6 @@
 import { NextPage } from "next";
 import Head from "next/head";
+import siteData from "../data/siteData";
 import { BsTwitter } from "react-icons/bs";
 
 const About: NextPage = () => {
@@ -12,8 +13,7 @@ const About: NextPage = () => {
       <h1 className="text-3xl font-bold">About U.S.</h1>
       <div className="flex flex-col items-center justify-center text-pageText mt-24 gap-2 leading-12">
         <p className="max-w-3xl text-center font-normal text-2xl">
-          We are a team of web3 enthusiasts building open source templates,
-          tools, and tutorials.
+          {siteData.description}
         </p>
         <a
           className="text-blue-600 hover:underline flex items-center gap-1 text-xl"

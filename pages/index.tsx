@@ -1,36 +1,72 @@
 import { NextPage } from "next";
-import Head from "next/head";
-import { useUserContext } from "../context/UserContextProvider";
+
+import MintMain from "../components/mint/MintMain";
+import * as anchor from "@project-serum/anchor";
 import useWalletBalance from "../context/WalletBalanceProvider";
+import { NFTCollection } from "../components/nft/NFTCollection";
+import { BsGithub } from "react-icons/bs";
+
+const getCandyMachineId = (): anchor.web3.PublicKey | undefined => {
+  try {
+    const candyMachineId = new anchor.web3.PublicKey(
+      process.env.NEXT_PUBLIC_CANDY_MACHINE_ID!
+    );
+
+    return candyMachineId;
+  } catch (e) {
+    console.log("Failed to construct CandyMachineId", e);
+    return undefined;
+  }
+};
+
+const candyMachineId = getCandyMachineId();
+const rpcHost = process.env.NEXT_PUBLIC_SOLANA_RPC_HOST!;
+const connection = new anchor.web3.Connection(rpcHost);
+
+const startDate = parseInt(process.env.NEXT_PUBLIC_CANDY_START_DATE!, 10);
+const txTimeout = 30000;
 
 const Index: NextPage = () => {
-  const { demo, setDemo } = useUserContext();
-  const { balance } = useWalletBalance();
+  const { walletAddress } = useWalletBalance();
   return (
     <div className="">
-      <Head>
-        <title>Next.js CMv2 Demo</title>
-        <meta name="description" content="Candy Machine V2 Demo with Next.js" />
-        <link rel="icon" href="/favicon.ico" />
-        <meta property="og:image" content="/seo.png" />
-      </Head>
-
-      <main className="">
-        <h1 className="">{demo}</h1>
-        <button
-          className="btn"
-          onClick={() => setDemo("Demo Changing Context")}
-        >
-          Click me
-        </button>
-        <button
-          className="btn-outline"
-          onClick={() => setDemo("Demo Changing Context")}
-        >
-          Click me
-        </button>
-        <p>{balance}</p>
-      </main>
+      <h1 className="text-3xl font-bold">Welcome</h1>
+      <div className="min-h-[50vh] flex items-center justify-center">
+        <div className="inline-block w-full">
+          <MintMain
+            candyMachineId={candyMachineId}
+            connection={connection}
+            startDate={startDate}
+            txTimeout={txTimeout}
+            rpcHost={rpcHost}
+          />
+        </div>
+      </div>
+      <div className="min-h-[50vh] flex items-center justify-center">
+        <div className="inline-block w-full">
+          <h3 className="text-pageText font-semibold text-xl text-center max-w-4xl m-auto mb-3">
+            Cards by Update Settings is an NFT project to provide a working
+            example of using the{" "}
+            <a
+              href="https://github.com/updatesettings/nextjs-candy-machine-v2"
+              target="_blank"
+              rel="noreferrer"
+              className="text-blue-500 hover:underline"
+            >
+              <BsGithub className="inline" /> Candy Machine v2 Next.js Template
+            </a>
+            .
+          </h3>
+          <p className="text-pageText opacity-60 text-center">
+            Cards are the future designs for an NFT boardgame.
+          </p>
+        </div>
+      </div>
+      {walletAddress && (
+        <div className="mt-10">
+          <NFTCollection />
+        </div>
+      )}
     </div>
   );
 };

@@ -18,7 +18,6 @@ interface MintCountdownRender {
 export const MintCountdown: React.FC<MintCountdownProps> = ({
   date,
   status,
-  style,
   onComplete,
 }) => {
   const renderCountdown = ({
