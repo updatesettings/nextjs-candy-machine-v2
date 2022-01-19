@@ -4,6 +4,13 @@ Tutorial by [Update Settings](http://github.com/updatesettings)
 
 BETA RELEASE - Updates still being made
 
+### To Do:
+
+- [ ] Remove unused code
+- [ ] Performance optimization
+- [x] Whitelist signup prevent duplicates
+- [ ] Animations
+
 ---
 
 # Setup Candy Machine
@@ -187,10 +194,3 @@ images: {
 CI=false
 
 ```
-
-### To Do:
-
-- [ ] Remove unused code
-- [ ] Performance optimization
-- [ ] Whitelist signup prevent duplicates
-- [ ] Animations

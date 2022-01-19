@@ -13,23 +13,43 @@ export default async function handler(req, res) {
   try {
     const { walletAddress } = JSON.parse(req.body);
 
-    await notion.pages.create({
-      parent: {
+    try {
+      const response = await notion.databases.query({
         database_id: process.env.NOTION_DATABASE_ID,
-      },
-      properties: {
-        WalletAddress: {
-          title: [
-            {
-              text: {
-                content: walletAddress,
-              },
-            },
-          ],
+        filter: {
+          property: "WalletAddress",
+          text: {
+            contains: walletAddress,
+          },
         },
-      },
-    });
-    res.status(201).json({ msg: "Success" });
+      });
+      if (response.results.length === 0) {
+        await notion.pages.create({
+          parent: {
+            database_id: process.env.NOTION_DATABASE_ID,
+          },
+          properties: {
+            WalletAddress: {
+              title: [
+                {
+                  text: {
+                    content: walletAddress,
+                  },
+                },
+              ],
+            },
+          },
+        });
+        res.status(201).json({ msg: "Success" });
+      } else {
+        res
+          .status(409)
+          .json({ msg: "Conflict: Item most likely exists already." });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ msg: "There was an error" });
+    }
   } catch (error) {
     res.status(500).json({ msg: "There was an error" });
   }
