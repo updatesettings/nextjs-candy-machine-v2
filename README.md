@@ -12,7 +12,7 @@ BETA RELEASE - Updates still being made
 
 Create New Wallet
 
-```json
+```bash
 // Optional: Make a folder if you dont already have one
 mkdir ~/my-solana-wallet
 
@@ -39,7 +39,7 @@ solana config set --url https://api.devnet.solana.com
 
 Create whitelist spl token
 
-```json
+```bash
 // Create Token
 spl-token create-token --decimals 0
 
@@ -59,7 +59,7 @@ Set up config file
 
 Civic pass disabled in this config
 
-```json
+```bash
 {
   "price": 1,
   "number": 310,
@@ -87,19 +87,19 @@ Civic pass disabled in this config
 
 <!-- Step 3 upload -->
 
-```json
+```bash
 npx ts-node js/packages/cli/src/candy-machine-v2-cli.ts upload -e devnet -k ~/my-solana-wallet/demo.json -cp config.json -c demo ./demo-assets --rpc-url https://api.devnet.solana.com
 ```
 
 <!-- Step 4 verify -->
 
-```json
+```bash
 npx ts-node js/packages/cli/src/candy-machine-v2-cli.ts verify_upload -e devnet -k ~/my-solana-wallet/demo.json -cp config.json -c demo
 ```
 
 <!-- Step 5 mint -->
 
-```json
+```bash
 // Mint one
 npx ts-node js/packages/cli/src/candy-machine-v2-cli.ts mint_one_token -e devnet -k ~/my-solana-wallet/demo.json -c demo
 
@@ -109,7 +109,7 @@ npx ts-node js/packages/cli/src/candy-machine-v2-cli.ts mint_multiple_tokens --n
 
 <!-- Step 6 optional update cm -->
 
-```json
+```bash
 // Update Candy Machine
 npx ts-node js/packages/cli/src/candy-machine-v2-cli.ts update_candy_machine -e devnet -k ~/my-solana-wallet/demo.json -c demo
 ```
@@ -118,7 +118,7 @@ npx ts-node js/packages/cli/src/candy-machine-v2-cli.ts update_candy_machine -e 
 
 <!-- Step 7 withdraw -->
 
-```json
+```bash
 // * WARNING *
 // This will break your candy machine and any other candy machines tied to the keypair.
 
@@ -135,7 +135,7 @@ npx ts-node js/packages/cli/src/candy-machine-v2-cli.ts withdraw -e devnet -k ~/
 
 # Run Front End
 
-```json
+```bash
 // Fork & Clone
 git clone https://github.com/updatesettings/nextjs-candy-machine-v2.git
 
@@ -177,7 +177,7 @@ images: {
 
 # Setup Build (Vercel)
 
-```json
+```bash
 // Login to vercel
 // Set up new project
 // Framework Preset: Next.js
