@@ -10,11 +10,17 @@ import {
   getCandyMachineState,
   mintOneToken,
 } from "../../utils/candy-machine";
-import { AlertState, getAtaForMint } from "../../utils/utils";
+import {
+  AlertState,
+  getAtaForMint,
+  toDate,
+  formatNumber,
+} from "../../utils/utils";
 import { Header } from "./MintHeader";
 import { MintButton } from "./MintButton";
 import { GatewayProvider } from "@civic/solana-gateway-react";
 import { toast } from "react-toastify";
+import { MintCountdown } from "./MintCountdown";
 
 export interface MintMainProps {
   candyMachineId?: anchor.web3.PublicKey;
@@ -87,8 +93,12 @@ const MintMain = (props: MintMainProps) => {
             console.error(e);
             balance = 0;
           }
-
-          setWhitelistTokenBalance(balance);
+          if (balance > 0) {
+            setWhitelistEnabled(true);
+            setWhitelistTokenBalance(balance);
+          } else {
+            setWhitelistEnabled(false);
+          }
         } else {
           setWhitelistEnabled(false);
         }
@@ -175,51 +185,90 @@ const MintMain = (props: MintMainProps) => {
   ]);
 
   return (
-    <div className="mint-card">
-      {!wallet.connected ? (
-        <WalletMultiButton className="btn-connect btn-reverse">
-          Connect Wallet
-        </WalletMultiButton>
-      ) : (
-        <>
-          <Header candyMachine={candyMachine} />
-          {wallet && whitelistEnabled && (
-            <p>Whitelist token balance: {whitelistTokenBalance}</p>
-          )}
-          <div>
-            {candyMachine?.state.isActive &&
-            candyMachine?.state.gatekeeper &&
-            wallet.publicKey &&
-            wallet.signTransaction ? (
-              <GatewayProvider
-                wallet={{
-                  publicKey:
-                    wallet.publicKey || new PublicKey(CANDY_MACHINE_PROGRAM),
-                  //@ts-ignore
-                  signTransaction: wallet.signTransaction,
-                }}
-                gatekeeperNetwork={
-                  candyMachine?.state?.gatekeeper?.gatekeeperNetwork
-                }
-                clusterUrl={rpcUrl}
-                options={{ autoShowModal: false }}
-              >
-                <MintButton
-                  candyMachine={candyMachine}
-                  isMinting={isUserMinting}
-                  onMint={onMint}
-                />
-              </GatewayProvider>
-            ) : (
-              <MintButton
-                candyMachine={candyMachine}
-                isMinting={isUserMinting}
-                onMint={onMint}
-              />
-            )}
-          </div>
-        </>
-      )}
+    <div className="mint-wrapper">
+      <MintCountdown
+        date={toDate(candyMachine?.state.goLiveDate)}
+        style={{ justifyContent: "flex-end" }}
+        status={
+          !candyMachine?.state?.isActive || candyMachine?.state?.isSoldOut
+            ? "COMPLETED"
+            : "LIVE"
+        }
+      />
+      <div className="mint-card">
+        {!wallet.connected ? (
+          <WalletMultiButton className="btn-connect btn-reverse">
+            Connect Wallet
+          </WalletMultiButton>
+        ) : (
+          <>
+            <div className="price">
+              <span className="price-regular">
+                Price:{" "}
+                <span
+                  className={
+                    whitelistEnabled ? "price-regular--has-discount" : ""
+                  }
+                >
+                  ◎ {formatNumber.asNumber(candyMachine?.state.price!)}
+                </span>
+              </span>
+              {whitelistEnabled && (
+                <span className="price-discount">
+                  ◎{" "}
+                  {formatNumber.asNumber(
+                    candyMachine?.state.whitelistMintSettings?.discountPrice!
+                  )}
+                </span>
+              )}
+              {whitelistEnabled && (
+                <div className="price-whitelist-notification">
+                  Whitelist Activated
+                  {/* <span>{whitelistTokenBalance}</span> */}
+                </div>
+              )}
+            </div>
+            <div className="m-auto w-fit p-3 sm:p-4">
+              {candyMachine?.state.isActive &&
+              candyMachine?.state.gatekeeper &&
+              wallet.publicKey &&
+              wallet.signTransaction ? (
+                <GatewayProvider
+                  wallet={{
+                    publicKey:
+                      wallet.publicKey || new PublicKey(CANDY_MACHINE_PROGRAM),
+                    //@ts-ignore
+                    signTransaction: wallet.signTransaction,
+                  }}
+                  gatekeeperNetwork={
+                    candyMachine?.state?.gatekeeper?.gatekeeperNetwork
+                  }
+                  clusterUrl={rpcUrl}
+                  options={{ autoShowModal: false }}
+                >
+                  <MintButton
+                    candyMachine={candyMachine}
+                    isMinting={isUserMinting}
+                    onMint={onMint}
+                  />
+                </GatewayProvider>
+              ) : (
+                <>
+                  <MintButton
+                    candyMachine={candyMachine}
+                    isMinting={isUserMinting}
+                    onMint={onMint}
+                  />
+                </>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+      <div className="mint-count">
+        Count:{" "}
+        {`${candyMachine?.state.itemsRemaining} / ${candyMachine?.state.itemsAvailable}`}
+      </div>
     </div>
   );
 };

@@ -29,15 +29,15 @@ export const MintCountdown: React.FC<MintCountdownProps> = ({
     completed,
   }: MintCountdownRender) => {
     hours += days * 24;
-    if (!completed) {
+    if (completed) {
       return status ? (
-        <p className="flex items-center">
+        <div className="countdown-status">
           <span className="flex h-3 w-3 relative mr-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
           </span>
           {status}
-        </p>
+        </div>
       ) : null;
     } else {
       return (

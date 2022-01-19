@@ -9,10 +9,8 @@ const Mint: NextPage = () => {
         <title>RSVP</title>
       </Head>
 
-      <main className="">
-        <h1 className="">RSVP</h1>
-        <RSVP />
-      </main>
+      <h1 className="text-3xl font-bold">Whitelist</h1>
+      <RSVP />
     </div>
   );
 };

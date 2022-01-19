@@ -146,19 +146,24 @@
 /* Outline Button - Primary Color*/
 /* Outline Button - Secondary Color */
 
+/* Mint Component */
+.mint-wrapper {
+  @apply max-w-lg m-auto;
+}
+
 .mint-card {
-  @apply bg-pageText text-pageBG p-3 sm:p-5 max-w-lg m-auto;
+  @apply bg-pageText text-pageBG p-3 sm:p-5;
 }
 
 .countdown {
-  @apply flex  max-w-xs m-auto bg-yellow-200 justify-center;
+  @apply flex   bg-yellow-200 justify-center;
 }
 .countdown-item {
   @apply flex flex-col text-yellow-700 h-14 items-center justify-center;
 }
 
 .countdown-num {
-  @apply text-2xl font-semibold w-12 text-center leading-7;
+  @apply text-2xl font-semibold w-12 lg:w-14 text-center leading-7;
 }
 
 .countdown-txt {
@@ -166,5 +171,28 @@
 }
 
 .countdown-status {
-  @apply h-12;
+  @apply h-14 bg-green-200 flex items-center justify-center font-semibold text-green-800 text-xl;
+}
+
+.mint-count {
+  @apply bg-pageBG text-pageText py-2 text-xs opacity-40;
+}
+
+/* price section on mint */
+.price {
+  @apply text-lg font-semibold;
+}
+.price-regular {
+  /* @apply text-lg; */
+}
+.price-regular--has-discount {
+  @apply line-through mr-2;
+}
+
+.price-discount {
+  @apply text-red-500;
+}
+
+.price-whitelist-notification {
+  @apply block w-fit font-normal px-2 text-2xs bg-green-100 text-green-900 text-center;
 }

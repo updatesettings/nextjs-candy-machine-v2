@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import useWalletBalance from "../context/WalletBalanceProvider";
+
 import MintMain from "../components/mint/MintMain";
 import * as anchor from "@project-serum/anchor";
 
@@ -25,8 +25,6 @@ const startDate = parseInt(process.env.NEXT_PUBLIC_CANDY_START_DATE!, 10);
 const txTimeout = 30000;
 
 const Mint: NextPage = () => {
-  const { balance } = useWalletBalance();
-
   return (
     <div>
       <Head>
@@ -34,8 +32,7 @@ const Mint: NextPage = () => {
       </Head>
 
       <main>
-        <h1 className="text-3xl font-bold underline">Mint Page</h1>
-        <p>{balance}</p>
+        <h1 className="text-3xl font-bold">Mint</h1>
         <MintMain
           candyMachineId={candyMachineId}
           connection={connection}

@@ -9,10 +9,8 @@ const Mint: NextPage = () => {
         <title>NFT Collection</title>
       </Head>
 
-      <main className="">
-        <h1 className="">Collection</h1>
-        <NFTCollection/>
-      </main>
+      <h1 className="text-3xl font-bold">Collection</h1>
+      <NFTCollection />
     </div>
   );
 };

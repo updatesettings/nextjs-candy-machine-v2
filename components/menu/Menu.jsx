@@ -58,7 +58,6 @@ export default function Menu() {
                         : "menu-bar-link"
                     }
                     onClick={menuToggle}
-                    disable={!walletAddress}
                   >
                     NFT Collection{" "}
                     {!walletAddress && (

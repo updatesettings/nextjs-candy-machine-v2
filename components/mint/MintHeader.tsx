@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { MintCountdown } from "./MintCountdown";
 import { toDate, formatNumber } from "../../utils/utils";
 import { CandyMachineAccount } from "../../utils/candy-machine";

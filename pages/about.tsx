@@ -9,8 +9,8 @@ const About: NextPage = () => {
         <title>About Update Settings</title>
       </Head>
 
+      <h1 className="text-3xl font-bold">About U.S.</h1>
       <div className="flex flex-col items-center justify-center text-pageText mt-24">
-        <h1 className="text-2xl font-bold mb-2">About U.S.</h1>
         <p className="max-w-md text-center font-normal">
           We are a team of web3 enthusiasts providing open source templates,
           tools, and tutorials.
