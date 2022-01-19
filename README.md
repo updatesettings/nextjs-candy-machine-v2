@@ -4,6 +4,10 @@ Tutorial by [Update Settings](http://github.com/updatesettings)
 
 BETA RELEASE - Updates still being made
 
+Need web3 help? Support Update Settings by becoming a Cursor holder to receive exclusive access to projects and get hands on web3 dev help by our team.
+
+## [Get a Cursor](https://magiceden.io/marketplace/cursors_by_update_settings)
+
 ### To Do:
 
 - [ ] Fix Presale Phase Header (page requires refresh)
