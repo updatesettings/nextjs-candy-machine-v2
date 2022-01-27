@@ -52,7 +52,14 @@ solana config set --url https://api.devnet.solana.com
 Create whitelist spl token
 
 ```bash
-// Create Token
+
+// Optional: Create Token w/ custom vanity
+solana-keygen grind --starts-with US:1
+
+// Create Token (If using custom vanity)
+spl-token create-token <TOKEN WITH VANITY> --decimals 0
+
+// Create Token (if NOT using custom vanity start here)
 spl-token create-token --decimals 0
 
 // Create token account
@@ -63,6 +70,24 @@ spl-token mint <TOKEN> <NUMBER TOKENS TO CREATE>
 
 // Check token supply
 spl-token balance <TOKEN>
+```
+
+Distribute SPL Tokens via Gumdrop (Optional)
+
+```bash
+
+// Create JSON file with dist list of wallet address
+example-dist.json
+[
+  {
+    "handle": "<DISTRIBUTION-METHOD-SPECIFIC-HANDLE>",
+    "amount": <GUMDROP-CLAIM-ALLOWANCE>,
+    ["edition": <EDITION-NUMBER>]
+  },
+]
+
+// Run Gumdrop to distribute SPL token
+npx ts-node js/packages/cli/src/gumdrop-cli.ts create -k <KEYPAIR> --claim-integration transfer --transfer-mint <SPL TOKEN> --distribution-method wallets --distribution-list example-dist.json
 ```
 
 <!-- Step 2 -->
@@ -119,7 +144,17 @@ npx ts-node js/packages/cli/src/candy-machine-v2-cli.ts mint_one_token -e devnet
 npx ts-node js/packages/cli/src/candy-machine-v2-cli.ts mint_multiple_tokens --number 3 -e devnet -k ~/my-solana-wallet/demo.json -c demo
 ```
 
-<!-- Step 6 optional update cm -->
+<!-- Step 7 verify keypair creator -->
+
+[Install Metaboss](https://github.com/samuelvanderwaal/metaboss)
+
+```bash
+
+// Verify Keypair for creator
+metaboss sign all --keypair <PATH_TO_KEYPAIR> --candy-machine-id <CANDY_MACHINE_ID> --v2
+```
+
+<!-- Step 7 optional update cm -->
 
 ```bash
 // Update Candy Machine
@@ -128,7 +163,7 @@ npx ts-node js/packages/cli/src/candy-machine-v2-cli.ts update_candy_machine -e 
 
 <!-- DANGER -->
 
-<!-- Step 7 withdraw -->
+<!-- Step 8 withdraw -->
 
 ```bash
 // * WARNING *
