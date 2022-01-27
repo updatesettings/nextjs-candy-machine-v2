@@ -4,6 +4,7 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useUserContext } from "../../context/UserContextProvider";
 import { FaWallet } from "react-icons/fa";
 import useWalletBalance from "../../context/WalletBalanceProvider";
+import siteData from "../../data/siteData";
 
 export default function Header() {
   const { menuOpen, setMenuOpen } = useUserContext();
@@ -25,13 +26,9 @@ export default function Header() {
         </button>
       </div>
       <div className="logo">
-        <Link href="/">Update Settings</Link>
+        <Link href="/">{siteData.site}</Link>
       </div>
       <div className="wallet">
-        {/* <span className="flex h-3 w-3 relative mr-3">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-        </span> */}
         <WalletMultiButton startIcon={null} className="btn-wallet">
           <div className="relative ">
             <FaWallet className="btn-wallet-icon inline-block" />

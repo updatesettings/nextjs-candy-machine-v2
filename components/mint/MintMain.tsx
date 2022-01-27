@@ -77,7 +77,6 @@ const MintMain = (props: MintMainProps) => {
         setCandyMachine(cndy);
 
         if (cndy.state.whitelistMintSettings) {
-          setWhitelistEnabled(true);
           let balance = 0;
           try {
             const tokenBalance = await props.connection.getTokenAccountBalance(
@@ -91,7 +90,8 @@ const MintMain = (props: MintMainProps) => {
 
             balance = tokenBalance?.value?.uiAmount || 0;
           } catch (e) {
-            console.error("no balance found", e);
+            // console.error("no balance found", e);
+            setWhitelistEnabled(false);
             balance = 0;
           }
           if (balance > 0) {
@@ -227,8 +227,6 @@ const MintMain = (props: MintMainProps) => {
         status={
           !candyMachine?.state?.isActive || candyMachine?.state?.isSoldOut
             ? "COMPLETED"
-            : candyMachine?.state.isPresale
-            ? "PRESALE"
             : "LIVE"
         }
       />
