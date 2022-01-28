@@ -28,6 +28,8 @@ export const MintButton = ({
       return "LOADING...";
     } else if (candyMachine?.state.isPresale) {
       return "PRESALE MINT";
+    } else if (clicked && candyMachine?.state.gatekeeper) {
+      return "Loading...";
     }
     return "MINT";
   };
@@ -36,6 +38,7 @@ export const MintButton = ({
     <button
       className="btn btn-reverse"
       disabled={
+        clicked ||
         candyMachine?.state.isSoldOut ||
         isMinting ||
         !candyMachine?.state.isActive

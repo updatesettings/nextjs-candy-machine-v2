@@ -150,8 +150,8 @@ npx ts-node js/packages/cli/src/candy-machine-v2-cli.ts mint_multiple_tokens --n
 
 ```bash
 
-// Verify Keypair for creator
-metaboss sign all --keypair <PATH_TO_KEYPAIR> --candy-machine-id <CANDY_MACHINE_ID> --v2
+// Verify Keypair for creator (-t 90 needed due to network )
+metaboss -t 90 sign all --keypair <PATH_TO_KEYPAIR> --candy-machine-id <CANDY_MACHINE_ID> --v2
 ```
 
 <!-- Step 7 optional update cm -->
