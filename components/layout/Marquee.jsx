@@ -19,7 +19,7 @@ export default function Marquee() {
             Candy Machine v2
           </span>
           <span className="text-lg font-semibold mx-16 uppercase">Next.js</span>
-          <span className="text-lg font-semibold mx-16 uppercase">0.1.0</span>
+          <span className="text-lg font-semibold mx-16 uppercase">0.1.3</span>
         </div>
 
         <div className="absolute top-0 animate-marquee2 whitespace-nowrap">
@@ -33,7 +33,7 @@ export default function Marquee() {
             Candy Machine v2
           </span>
           <span className="text-lg font-semibold mx-16 uppercase">Next.js</span>
-          <span className="text-lg font-semibold mx-16 uppercase">0.1.0</span>
+          <span className="text-lg font-semibold mx-16 uppercase">0.1.3</span>
         </div>
       </div>
     </a>
