@@ -1,39 +1,36 @@
 import React from "react";
+import siteData from "../../data/siteData";
 
 export default function Marquee() {
+  // To Do: Create a function that determines if this is an internal (should use next/link) or external link (has target="_blank")
+  const { text, link } = siteData.marquee;
   return (
-    <a
-      href="https://github.com/updatesettings/nextjs-candy-machine-v2"
-      target="_blank"
-      rel="noreferrer"
-    >
+    <a href={link} target="_blank" rel="noreferrer">
       <div className="relative flex overflow-x-hidden bg-green-400 text-white">
         <div className="animate-marquee whitespace-nowrap">
-          <span className="text-lg font-semibold mx-16 uppercase">
-            Beta Release
-          </span>
-          <span className="text-lg font-semibold mx-16 uppercase">
-            Update Settings
-          </span>
-          <span className="text-lg font-semibold mx-16 uppercase">
-            Candy Machine v2
-          </span>
-          <span className="text-lg font-semibold mx-16 uppercase">Next.js</span>
-          <span className="text-lg font-semibold mx-16 uppercase">0.1.3</span>
+          {text.map((text, index) => {
+            return (
+              <span
+                className="text-lg font-semibold mx-16 uppercase"
+                key={index}
+              >
+                {text}
+              </span>
+            );
+          })}
         </div>
 
         <div className="absolute top-0 animate-marquee2 whitespace-nowrap">
-          <span className="text-lg font-semibold mx-16 uppercase">
-            Beta Release
-          </span>
-          <span className="text-lg font-semibold mx-16 uppercase">
-            Update Settings
-          </span>
-          <span className="text-lg font-semibold mx-16 uppercase">
-            Candy Machine v2
-          </span>
-          <span className="text-lg font-semibold mx-16 uppercase">Next.js</span>
-          <span className="text-lg font-semibold mx-16 uppercase">0.1.3</span>
+          {text.map((text, index) => {
+            return (
+              <span
+                className="text-lg font-semibold mx-16 uppercase"
+                key={index}
+              >
+                {text}
+              </span>
+            );
+          })}
         </div>
       </div>
     </a>
