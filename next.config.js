@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const withTM = require("next-transpile-modules")([
-  "@blocto/sdk",
-  "@project-serum/sol-wallet-adapter",
-]);
+const withTM = require("next-transpile-modules")(["@blocto/sdk"]);
 
 /** @type {import('next').NextConfig} */
 module.exports = withTM({
