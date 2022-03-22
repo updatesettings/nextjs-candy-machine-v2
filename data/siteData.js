@@ -21,7 +21,7 @@ const siteData = {
       "Update Settings",
       "Candy Machine v2",
       "Next.js",
-      "0.1.4",
+      "0.1.5",
     ],
   },
 };
