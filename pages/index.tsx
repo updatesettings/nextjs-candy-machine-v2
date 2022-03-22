@@ -23,7 +23,6 @@ const candyMachineId = getCandyMachineId();
 const rpcHost = process.env.NEXT_PUBLIC_SOLANA_RPC_HOST!;
 const connection = new anchor.web3.Connection(rpcHost);
 
-const startDate = parseInt(process.env.NEXT_PUBLIC_CANDY_START_DATE!, 10);
 const txTimeout = 30000;
 
 const Index: NextPage = () => {
@@ -57,7 +56,6 @@ const Index: NextPage = () => {
           <MintMain
             candyMachineId={candyMachineId}
             connection={connection}
-            startDate={startDate}
             txTimeout={txTimeout}
             rpcHost={rpcHost}
           />
