@@ -24,12 +24,17 @@ import { MintCountdown } from "./MintCountdown";
 export interface MintMainProps {
   candyMachineId?: anchor.web3.PublicKey;
   connection: anchor.web3.Connection;
-  startDate: number;
   txTimeout: number;
   rpcHost: string;
 }
 
 const MintMain = (props: MintMainProps) => {
+  const [isActive, setIsActive] = useState(false);
+  const [endDate, setEndDate] = useState<Date>();
+  const [itemsRemaining, setItemsRemaining] = useState<number>();
+  const [isWhitelistUser, setIsWhitelistUser] = useState(false);
+  const [isPresale, setIsPresale] = useState(false);
+  const [discountPrice, setDiscountPrice] = useState<anchor.BN>();
   const [isUserMinting, setIsUserMinting] = useState(false);
   const [candyMachineLoading, setCandyMachineLoading] = useState(false);
   const [candyMachine, setCandyMachine] = useState<CandyMachineAccount>();
@@ -74,26 +79,107 @@ const MintMain = (props: MintMainProps) => {
           props.candyMachineId,
           props.connection
         );
+        let active =
+          cndy?.state.goLiveDate?.toNumber() < new Date().getTime() / 1000;
+        let presale = false;
+        // whitelist mint?
+        if (cndy?.state.whitelistMintSettings) {
+          // is it a presale mint?
+          if (
+            cndy.state.whitelistMintSettings.presale &&
+            (!cndy.state.goLiveDate ||
+              cndy.state.goLiveDate.toNumber() > new Date().getTime() / 1000)
+          ) {
+            presale = true;
+          }
+          // is there a discount?
+          if (cndy.state.whitelistMintSettings.discountPrice) {
+            setDiscountPrice(cndy.state.whitelistMintSettings.discountPrice);
+          } else {
+            setDiscountPrice(undefined);
+            // when presale=false and discountPrice=null, mint is restricted
+            // to whitelist users only
+            if (!cndy.state.whitelistMintSettings.presale) {
+              cndy.state.isWhitelistOnly = true;
+            }
+          }
+          // retrieves the whitelist token
+          const mint = new anchor.web3.PublicKey(
+            cndy.state.whitelistMintSettings.mint
+          );
+          const token = (await getAtaForMint(mint, anchorWallet.publicKey))[0];
+
+          try {
+            const balance = await props.connection.getTokenAccountBalance(
+              token
+            );
+            let valid = parseInt(balance.value.amount) > 0;
+            // only whitelist the user if the balance > 0
+            setIsWhitelistUser(valid);
+            active = (presale && valid) || active;
+          } catch (e) {
+            setIsWhitelistUser(false);
+            // no whitelist user, no mint
+            if (cndy.state.isWhitelistOnly) {
+              active = false;
+            }
+            console.log("There was a problem fetching whitelist token balance");
+            console.log(e);
+          }
+        }
+        // datetime to stop the mint?
+        // console.log("here", cndy);
+        if (cndy?.state.endSettings?.endSettingType.date) {
+          setEndDate(toDate(cndy.state.endSettings.number));
+          if (
+            cndy.state.endSettings.number.toNumber() <
+            new Date().getTime() / 1000
+          ) {
+            active = false;
+          }
+        }
+        // amount to stop the mint?
+        if (cndy?.state.endSettings?.endSettingType.amount) {
+          let limit = Math.min(
+            cndy.state.endSettings.number.toNumber(),
+            cndy.state.itemsAvailable
+          );
+          if (cndy.state.itemsRedeemed < limit) {
+            setItemsRemaining(limit - cndy.state.itemsRedeemed);
+          } else {
+            setItemsRemaining(0);
+            cndy.state.isSoldOut = true;
+          }
+        } else {
+          setItemsRemaining(cndy.state.itemsRemaining);
+        }
+
+        if (cndy.state.isSoldOut) {
+          active = false;
+        }
+
+        setIsActive((cndy.state.isActive = active));
+        setIsPresale((cndy.state.isPresale = presale));
         setCandyMachine(cndy);
 
         if (cndy.state.whitelistMintSettings) {
           let balance = 0;
-          try {
-            const tokenBalance = await props.connection.getTokenAccountBalance(
-              (
-                await getAtaForMint(
-                  cndy.state.whitelistMintSettings.mint,
-                  anchorWallet.publicKey
-                )
-              )[0]
-            );
+          // try {
+          //   const tokenBalance = await props.connection.getTokenAccountBalance(
+          //     (
+          //       await getAtaForMint(
+          //         cndy.state.whitelistMintSettings.mint,
+          //         anchorWallet.publicKey
+          //       )
+          //     )[0]
+          //   );
 
-            balance = tokenBalance?.value?.uiAmount || 0;
-          } catch (e) {
-            // console.error("no balance found", e);
-            setWhitelistEnabled(false);
-            balance = 0;
-          }
+          //   balance = tokenBalance?.value?.uiAmount || 0;
+          // } catch (e) {
+          //   // console.error("no balance found", e);
+          //   setWhitelistEnabled(false);
+          //   balance = 0;
+          // }
           if (balance > 0) {
             setWhitelistEnabled(true);
             setWhitelistTokenBalance(balance);
@@ -104,7 +190,7 @@ const MintMain = (props: MintMainProps) => {
           setWhitelistEnabled(false);
         }
       } catch (e) {
-        console.log("There was a problem fetching Candy Machine state");
+        console.log("There was a problem fetching CM state");
         console.log(e);
       }
       setCandyMachineLoading(false);
@@ -131,6 +217,12 @@ const MintMain = (props: MintMainProps) => {
         }
 
         if (status && !status.err) {
+          // manual update since the refresh might not detect
+          // the change immediately
+          let remaining = itemsRemaining! - 1;
+          setItemsRemaining(remaining);
+          setIsActive((candyMachine.state.isActive = remaining > 0));
+          candyMachine.state.isSoldOut = remaining === 0;
           toast.success("Congratulations! Mint succeeded!");
           setAlertState({
             open: true,
@@ -144,6 +236,9 @@ const MintMain = (props: MintMainProps) => {
             message: "Mint failed! Please try again!",
             severity: "error",
           });
+          // updates the candy machine state to reflect the lastest
+          // information on chain
+          refreshCandyMachineState();
         }
       }
     } catch (error: any) {
@@ -175,6 +270,29 @@ const MintMain = (props: MintMainProps) => {
       setIsUserMinting(false);
       refreshCandyMachineState();
     }
+  };
+
+  const toggleMintButton = () => {
+    let active = !isActive || isPresale;
+
+    if (active) {
+      if (candyMachine!.state.isWhitelistOnly && !isWhitelistUser) {
+        active = false;
+      }
+      if (endDate && Date.now() >= endDate.getTime()) {
+        active = false;
+      }
+    }
+
+    if (
+      isPresale &&
+      candyMachine!.state.goLiveDate &&
+      candyMachine!.state.goLiveDate.toNumber() <= new Date().getTime() / 1000
+    ) {
+      setIsPresale((candyMachine!.state.isPresale = false));
+    }
+
+    setIsActive((candyMachine!.state.isActive = active));
   };
 
   useEffect(() => {
@@ -215,21 +333,44 @@ const MintMain = (props: MintMainProps) => {
   }
 
   return (
-    <div className="mint-wrapper">
-      <MintCountdown
-        date={toDate(
-          candyMachine?.state.goLiveDate
-            ? candyMachine?.state.goLiveDate
-            : candyMachine?.state.isPresale
-            ? new anchor.BN(new Date().getTime() / 1000)
-            : undefined
-        )}
-        status={
-          !candyMachine?.state?.isActive || candyMachine?.state?.isSoldOut
-            ? "COMPLETED"
-            : "LIVE"
-        }
-      />
+    <div className="mint-wrapper w-full">
+      {candyMachine && (
+        <div>
+          {isActive && endDate && Date.now() < endDate.getTime() ? (
+            <>
+              <MintCountdown
+                key="endSettings"
+                date={getCountdownDate(candyMachine)}
+                style={{ justifyContent: "flex-end" }}
+                status="COMPLETED"
+                onComplete={toggleMintButton}
+              />
+              {/* <p>TO END OF MINT</p> */}
+            </>
+          ) : (
+            <>
+              <MintCountdown
+                key="goLive"
+                date={getCountdownDate(candyMachine)}
+                style={{ justifyContent: "flex-end" }}
+                status={
+                  candyMachine?.state?.isSoldOut ||
+                  (endDate && Date.now() > endDate.getTime())
+                    ? "COMPLETED"
+                    : isPresale
+                    ? "PRESALE"
+                    : "LIVE"
+                }
+                onComplete={toggleMintButton}
+              />
+              {/* {isPresale &&
+                candyMachine.state.goLiveDate &&
+                candyMachine.state.goLiveDate.toNumber() >
+                  new Date().getTime() / 1000 && <p>UNTIL PUBLIC MINT</p>} */}
+            </>
+          )}
+        </div>
+      )}
       <div className="mint-card">
         {!wallet.connected ? (
           <WalletMultiButton className="btn-connect btn-reverse m-auto">
@@ -239,29 +380,27 @@ const MintMain = (props: MintMainProps) => {
           <>
             <div className="price">
               <span className="price-regular">
-                Price:{" "}
+                {isWhitelistUser && discountPrice
+                  ? "  Whitelist Price"
+                  : "Price"}
                 <span
                   className={
                     whitelistEnabled ? "price-regular--has-discount" : ""
                   }
                 >
-                  ◎ {formatNumber.asNumber(candyMachine?.state.price!)}
-                </span>
-              </span>
-              {whitelistEnabled && (
-                <span className="price-discount">
-                  ◎{" "}
-                  {formatNumber.asNumber(
-                    candyMachine?.state.whitelistMintSettings?.discountPrice!
+                  {isWhitelistUser && discountPrice ? (
+                    <>
+                      {" ◎ "}
+                      <span className="price-regular--has-discount">
+                        {formatNumber.asNumber(candyMachine?.state.price)}
+                      </span>
+                      {formatNumber.asNumber(discountPrice)}
+                    </>
+                  ) : (
+                    `◎ ${formatNumber.asNumber(candyMachine?.state.price)}`
                   )}
                 </span>
-              )}
-              {whitelistEnabled && (
-                <div className="price-whitelist-notification">
-                  Whitelist Activated
-                  {/* <span>{whitelistTokenBalance}</span> */}
-                </div>
-              )}
+              </span>
             </div>
             <div className="m-auto w-fit p-3 sm:p-4">
               {candyMachine?.state.isActive &&
@@ -285,6 +424,7 @@ const MintMain = (props: MintMainProps) => {
                     candyMachine={candyMachine}
                     isMinting={isUserMinting}
                     onMint={onMint}
+                    isActive={isActive || (isPresale && isWhitelistUser)}
                   />
                 </GatewayProvider>
               ) : (
@@ -293,6 +433,7 @@ const MintMain = (props: MintMainProps) => {
                     candyMachine={candyMachine}
                     isMinting={isUserMinting}
                     onMint={onMint}
+                    isActive={isActive || (isPresale && isWhitelistUser)}
                   />
                 </>
               )}
@@ -301,12 +442,28 @@ const MintMain = (props: MintMainProps) => {
         )}
       </div>
       {candyMachine && (
-        <div className="mint-count">
-          Count:{" "}
-          {`${candyMachine?.state.itemsRemaining} / ${candyMachine?.state.itemsAvailable}`}
-        </div>
+        <div className="mint-count">Count: {`${itemsRemaining} / 3333`}</div>
       )}
     </div>
+  );
+};
+
+const getCountdownDate = (
+  candyMachine: CandyMachineAccount
+): Date | undefined => {
+  if (
+    candyMachine.state.isActive &&
+    candyMachine.state.endSettings?.endSettingType.date
+  ) {
+    return toDate(candyMachine.state.endSettings.number);
+  }
+
+  return toDate(
+    candyMachine.state.goLiveDate
+      ? candyMachine.state.goLiveDate
+      : candyMachine.state.isPresale
+      ? new anchor.BN(new Date().getTime() / 1000)
+      : undefined
   );
 };
 

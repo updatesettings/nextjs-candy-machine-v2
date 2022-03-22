@@ -16,16 +16,19 @@
 
   --pageBG: #f4f4f0;
   --pageText: #000000;
+  --scope: #0066ff;
 }
 
 [data-theme="dark"] {
   --pageBG: #000000;
   --pageText: #f4f4f0;
+  --scope: #0066ff;
 }
 
-[data-theme="metal"] {
+[data-theme="terminal"] {
   --pageBG: #000000;
-  --pageText: #fb1b15;
+  --pageText: #00fd15;
+  --scope: #ff1717;
 }
 
 /* Layout */
@@ -76,7 +79,7 @@
 }
 
 .footer {
-  @apply bg-pageBG text-pageText flex flex-row flex-wrap-reverse justify-between p-4 gap-2;
+  @apply bg-pageBG text-pageText p-4;
 }
 
 .footer-copy {
@@ -236,4 +239,69 @@
 
 .collection-item--links > a {
   @apply block basis-1/2 px-1;
+}
+
+/* scope Cursor */
+.scope {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--scope);
+  outline: none;
+  border-radius: 100%;
+  transform: translate(-50%, -50%);
+  -webkit-transition-duration: 100ms;
+  transition-duration: 100ms;
+  -webkit-transition-timing-function: ease-out;
+  transition-timing-function: ease-out;
+  will-change: width, height, transform, border;
+  z-index: 999;
+  pointer-events: none;
+  outline: none;
+}
+
+.dot {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background-color: var(--scope);
+  border-radius: 100%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  pointer-events: none;
+}
+
+.scope.hovered {
+  width: 50px;
+  height: 50px;
+  border-width: 3px;
+  border-color: lightgray;
+}
+
+.dot.hovered {
+  display: none;
+}
+
+.expand {
+  animation: cursorAnim 0.5s ease-in-out;
+}
+
+@keyframes cursorAnim {
+  0% {
+    width: 30px;
+    height: 30px;
+  }
+  50% {
+    width: 40px;
+    height: 40px;
+  }
+  100% {
+    width: 30px;
+    height: 30px;
+    opacity: 0;
+  }
 }

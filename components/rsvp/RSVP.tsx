@@ -1,6 +1,8 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useState, useEffect } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { useForm } from "react-hook-form";
+import siteData from "../../data/siteData";
 
 interface Props {}
 
@@ -8,12 +10,17 @@ export default function RSVP({}: Props): ReactElement {
   const { publicKey } = useWallet();
   const [walletAddLoading, setWalletAddLoading] = useState(false);
   const [walletAdded, setWalletAdded] = useState("");
+  const {
+    register,
+    getValues,
+    formState: { errors, isDirty, isValid },
+  } = useForm({ mode: "onChange", delayError: 1500 });
 
-  const submitRSVP = async (walletAddress: any) => {
+  const submitRSVP = async (walletAddress: any, discord: string) => {
     setWalletAddLoading(true);
     const res = await fetch("/api/submit-form", {
       method: "POST",
-      body: JSON.stringify({ walletAddress }),
+      body: JSON.stringify({ walletAddress, discord }),
     });
     // Success if status code is 201
     if (res.status === 201) {
@@ -27,6 +34,47 @@ export default function RSVP({}: Props): ReactElement {
       setWalletAddLoading(false);
     }
   };
+
+  const rsvpForm = () => (
+    <div className="px-5 w-full">
+      <div>
+        <form>
+          <br />
+          <label className="text-pageText text-lg font-bold mb-2">
+            Discord Username
+          </label>
+          <input
+            className="input mb-4"
+            placeholder="emorb#1234"
+            {...register("discord", {
+              pattern: /^.{3,32}#[0-9]{4}$/,
+              required: true,
+            })}
+          />
+          {errors.discord && (
+            <p className="text-xs text-red-500">
+              Please enter discord username including discriminator numbers.
+              e.g. emorb#1234
+            </p>
+          )}
+          <br />
+          <button
+            className="btn"
+            type="button"
+            disabled={!isDirty || !isValid}
+            onClick={() => {
+              let walletAddress = publicKey?.toBase58();
+              const discord = getValues("discord");
+              submitRSVP(walletAddress, discord);
+            }}
+          >
+            Sign Up Whitelist
+          </button>
+          <br />
+        </form>
+      </div>
+    </div>
+  );
 
   const responseStatus = () => {
     switch (walletAdded) {
@@ -44,40 +92,20 @@ export default function RSVP({}: Props): ReactElement {
         );
       case "error":
         return (
-          <div className=" h-24 px-5  flex flex-col items-center">
-            <button
-              onClick={() => {
-                let walletAddress = publicKey?.toBase58();
-                submitRSVP(walletAddress);
-              }}
-              className="btn"
-            >
-              {walletAddLoading ? "Loading..." : "Sign Up"}
-            </button>
+          <div>
+            {rsvpForm()}
             <p className="text-red-500 mt-1 text-2xs">Error Occurred</p>
           </div>
         );
       case "":
-        return (
-          <div className=" h-24 px-5  flex flex-col items-center">
-            <button
-              onClick={() => {
-                let walletAddress = publicKey?.toBase58();
-                submitRSVP(walletAddress);
-              }}
-              className="btn"
-            >
-              {walletAddLoading ? "Loading..." : "Sign Up"}
-            </button>
-          </div>
-        );
+        return rsvpForm();
     }
   };
 
   return (
     <div className="max-w-2xl text-pageText m-auto p-2 sm:p-4 md:p-8 flex flex-col justify-center items-center">
       <p className="mb-6 text-base ">
-        Sign up for the Update Settings Whitelist.
+        Sign up for the {siteData.site} Whitelist.
       </p>
       {publicKey ? (
         <>

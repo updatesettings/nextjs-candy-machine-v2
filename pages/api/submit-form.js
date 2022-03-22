@@ -11,8 +11,7 @@ export default async function handler(req, res) {
       .json({ message: `${req.method} requests are not allowed` });
   }
   try {
-    const { walletAddress } = JSON.parse(req.body);
-
+    const { walletAddress, discord } = JSON.parse(req.body);
     try {
       const response = await notion.databases.query({
         database_id: process.env.NOTION_DATABASE_ID,
@@ -34,6 +33,16 @@ export default async function handler(req, res) {
                 {
                   text: {
                     content: walletAddress,
+                  },
+                },
+              ],
+            },
+            Discord: {
+              rich_text: [
+                {
+                  type: "text",
+                  text: {
+                    content: discord,
                   },
                 },
               ],
