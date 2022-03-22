@@ -442,7 +442,9 @@ const MintMain = (props: MintMainProps) => {
         )}
       </div>
       {candyMachine && (
-        <div className="mint-count">Count: {`${itemsRemaining} / 3333`}</div>
+        <div className="mint-count">
+          Count: {`${itemsRemaining} / ${candyMachine.state.itemsAvailable}`}
+        </div>
       )}
     </div>
   );
