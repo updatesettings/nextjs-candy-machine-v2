@@ -1,6 +1,6 @@
 {
   "name": "@update-settings/nextjs-candy-machine-v2",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "author": "Update Settings",
   "repository": "https://github.com/update-settings",
   "license": "Apache-2.0",
@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@civic/solana-gateway-react": "^0.4.14-beta.1",
+    "@identity.com/solana-gateway-ts": "^0.8.2",
     "@notionhq/client": "^1.0.4",
     "@project-serum/anchor": "^0.17.0",
     "@solana/spl-token": "^0.1.8",
