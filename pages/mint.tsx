@@ -32,6 +32,7 @@ const Mint: NextPage = () => {
 
       <main>
         <h1 className="text-3xl font-bold">Mint</h1>
+        {console.log("candymachine id", candyMachineId)}
         <MintMain
           candyMachineId={candyMachineId}
           connection={connection}
