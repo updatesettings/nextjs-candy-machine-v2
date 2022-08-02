@@ -1,3 +1,5 @@
+## BEEN ON HOLIDAY AND DOING IRL LIFE STUFF, BUT WILL GET BACK TO THIS SOON. 
+
 # Metaplex Candy Machine V2 - Next.js
 
 Tutorial by [Update Settings](http://github.com/updatesettings)
