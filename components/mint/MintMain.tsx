@@ -29,15 +29,18 @@ import { GatewayProvider } from "@civic/solana-gateway-react";
 import { sendTransaction } from "../../utils/connection";
 import { toast } from "react-toastify";
 import { MintCountdown } from "./MintCountdown";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 
 export interface MintMainProps {
   candyMachineId?: anchor.web3.PublicKey;
   connection: anchor.web3.Connection;
   txTimeout: number;
   rpcHost: string;
+  network?: WalletAdapterNetwork;
 }
 
 const MintMain = (props: MintMainProps) => {
+  const cluster = props.network || WalletAdapterNetwork.Mainnet;
   const [isUserMinting, setIsUserMinting] = useState(false);
   const [candyMachine, setCandyMachine] = useState<CandyMachineAccount>();
   const [alertState, setAlertState] = useState<AlertState>({
@@ -544,6 +547,7 @@ const MintMain = (props: MintMainProps) => {
               {candyMachine?.state.isActive &&
               candyMachine?.state.gatekeeper &&
               wallet.publicKey &&
+              cluster &&
               wallet.signTransaction ? (
                 <GatewayProvider
                   wallet={{
@@ -556,74 +560,7 @@ const MintMain = (props: MintMainProps) => {
                     candyMachine?.state?.gatekeeper?.gatekeeperNetwork
                   }
                   clusterUrl={rpcUrl}
-                  handleTransaction={async (transaction: Transaction) => {
-                    setIsUserMinting(true);
-                    const userMustSign = transaction.signatures.find((sig) =>
-                      sig.publicKey.equals(wallet.publicKey!)
-                    );
-                    if (userMustSign) {
-                      toast.info("Please sign one-time Civic Pass issuance");
-                      setAlertState({
-                        open: true,
-                        message: "Please sign one-time Civic Pass issuance",
-                        severity: "info",
-                      });
-                      try {
-                        transaction = await wallet.signTransaction!(
-                          transaction
-                        );
-                      } catch (e) {
-                        toast.error("User cancelled signing");
-                        setAlertState({
-                          open: true,
-                          message: "User cancelled signing",
-                          severity: "error",
-                        });
-                        // setTimeout(() => window.location.reload(), 2000);
-                        setIsUserMinting(false);
-                        throw e;
-                      }
-                    } else {
-                      toast.info("Refreshing Civic Pass");
-                      setAlertState({
-                        open: true,
-                        message: "Refreshing Civic Pass",
-                        severity: "info",
-                      });
-                    }
-                    try {
-                      await sendTransaction(
-                        props.connection,
-                        wallet,
-                        transaction,
-                        [],
-                        true,
-                        "confirmed"
-                      );
-                      toast.info("Please sign minting");
-                      setAlertState({
-                        open: true,
-                        message: "Please sign minting",
-                        severity: "info",
-                      });
-                    } catch (e) {
-                      toast.warning(
-                        "Solana dropped the transaction, please try again"
-                      );
-                      setAlertState({
-                        open: true,
-                        message:
-                          "Solana dropped the transaction, please try again",
-                        severity: "warning",
-                      });
-                      console.error(e);
-                      // setTimeout(() => window.location.reload(), 2000);
-                      setIsUserMinting(false);
-                      throw e;
-                    }
-                    await onMint();
-                  }}
-                  broadcastTransaction={false}
+                  cluster={cluster}
                   options={{ autoShowModal: false }}
                 >
                   <MintButton

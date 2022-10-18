@@ -5,8 +5,6 @@
       "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "workbench.colorCustomizations": {
-        "titleBar.activeBackground": "#00a197",
-        "titleBar.activeForeground": "#1f1f1f",
-        "editorLineNumber.foreground": "#CCCCCC",
-      }
+      "editorLineNumber.foreground": "#CCCCCC"
+    }
 }
